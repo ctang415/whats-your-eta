@@ -1,0 +1,22 @@
+const csv=require('csvtojson');
+const csvFilePath = './subway_data/stations.csv';
+
+module.exports = async function getStations() {
+    try {
+        let stations = {};
+        let data = await csv().fromFile(csvFilePath).then((jsonObj)=>{
+            jsonObj.forEach(element => {
+                stations[element.gtfs_stop_id] = {'station_id': element.station_id, 'name': element.stop_name, 'routes': element.daytime_routes}
+            });
+            return stations;
+        })
+        return data;
+    } catch (err) {
+        console.log(err);
+    }
+};
+
+
+
+
+  

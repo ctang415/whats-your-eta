@@ -4,6 +4,7 @@ const GtfsRealtimeBindings = require("gtfs-realtime-bindings");
 
 exports.get_all_trains = async (req, res, next) => {
     let data = await trains();
+    console.log(data)
     return res.json(data);
 }
 

@@ -7,7 +7,9 @@ module.exports = async function getRoutes() {
         let routes = {};
         await csv().fromFile(csvFilePath).then((jsonObj)=>{
             jsonObj.forEach(element => {
-                routes[element.route_id] = {"name": element.route_short_name, 'color': element.route_color}
+                if (!element.route_short_name.includes("X") && !element.route_long_name.includes("Shuttle")) {
+                    routes[element.route_id] = {"name": element.route_id, 'color': element.route_color}
+                }
             });
         })
         return routes;

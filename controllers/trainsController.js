@@ -1,6 +1,7 @@
 const trains = require('../trainData');
 const stations = require('../stations');
 const GtfsRealtimeBindings = require("gtfs-realtime-bindings");
+const urlMap = require('../realTime');
 
 exports.get_all_trains = async (req, res, next) => {
     let data = await trains();
@@ -34,10 +35,12 @@ exports.get_train_stations = async (req, res, next) => {
          // console.log(new Date(time * 1000).toLocaleTimeString());
         }
       });
-    }
-    catch (error) {
+    } catch (error) {
       console.log(error);
     }
   }
+  console.log(urlMap)
+//  let x = fetchData()
+  //console.log(x);
     return res.json(filteredData);
 }

@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-const Header = () => {
-
-=======
 import Subway from "../assets/train.svg";
 import Bus from "../assets/bus.svg";
 import Favorite from "../assets/favorite.svg";
@@ -26,7 +22,6 @@ const Header = () => {
             </Link>
         </header>
     )
->>>>>>> bc35576 (Added header and icons)
 }
 
 export default Header

@@ -4,24 +4,9 @@ import { Link } from "react-router-dom";
 import { Context } from "./context";
 
 const Trains = () => {
-    const {trains, setTrains} = useContext(Context);
+    const {trains, setTrains, fetchTrains} = useContext(Context);
     let ignore = false;
-    async function fetchTrains() {
-        try {
-            const response = await fetch ('http://localhost:3000/trains');
-            const data = await response.json();
-            function groupBy(obj, key) {
-                return obj.reduce(function(rv, x) {
-                  (rv[x[key]] = rv[x[key]] || []).push(x);
-                  return rv;
-                }, {});
-              };
-            setTrains(Object.values(groupBy(Object.values(data), 'color')));
-        } catch (err) {
-        console.log(err);
-        }
-    }    
-    
+
     useEffect(() => {
         if(!ignore) {
             fetchTrains();

@@ -1,6 +1,9 @@
 import { createContext } from "react";
 
 export const Context = createContext({
+    fetchTrain: () => {},
     setTrains: () => {},
-    trains: null
+    trains: null,
+    setColors: () => {},
+    colors: null
 });

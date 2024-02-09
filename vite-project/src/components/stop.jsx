@@ -12,12 +12,17 @@ const Stop = ({element, north, south, train, color}) => {
 
     useEffect(() => {
         if (!ignore) {
-            let newNorth = north.filter(el => el.stopId.includes(element.gtfs)).sort( (a,b) => { a.arrival && b.arrival ?  a.arrival.time - b.arrival.time : "" });
-            let newSouth = south.filter(el => el.stopId.includes(element.gtfs)).sort( (a,b) => { a.arrival && b.arrival ?  a.arrival.time - b.arrival.time : ""});
+           let newNorth = north.filter(el => el.stopId.includes(element.gtfs)).sort( function (a,b) { 
+                if (a.arrival && b.arrival) {
+                    return a.arrival.time - b.arrival.time } 
+                });
+            let newSouth = south.filter(el => el.stopId.includes(element.gtfs)).sort( function (a,b) { 
+                if (a.arrival && b.arrival) {
+                    return a.arrival.time - b.arrival.time } 
+                });
             setNorthTimes(newNorth);
             setSouthTimes(newSouth);
             setIsLoading(false);
-            //<p>{new Date(el.arrival.time * 1000).toLocaleTimeString()}</p>
         }
         return () => {
             ignore = true;

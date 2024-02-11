@@ -36,8 +36,7 @@ const fetchData = async (url) => {
   feed.entity.forEach((entity) => {
     if (entity.tripUpdate) {
         array.push(entity.tripUpdate);
-      //let time = entity.tripUpdate.stopTimeUpdate[0].arrival.time
-     // console.log(new Date(time * 1000).toLocaleTimeString());
+        //console.log(entity.tripUpdate)
     }
   });
   return array;

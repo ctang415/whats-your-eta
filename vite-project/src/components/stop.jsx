@@ -10,6 +10,11 @@ const Stop = ({element, north, south, train, color}) => {
     const [southTimes, setSouthTimes] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
 
+    function addToFavorites(name, trains, stop) {
+       //localStorage.clear()
+        localStorage.setItem(`${name}`, JSON.stringify({route: trains, id: stop}));
+    }
+
     useEffect(() => {
         if (!ignore) {
            let newNorth = north.filter(el => el.stopId.includes(element.gtfs)).sort( function (a,b) { 
@@ -30,15 +35,15 @@ const Stop = ({element, north, south, train, color}) => {
     }, []);
 
     return (
-        <li key={element.name} className="p-4 bg-slate-200">
+        <li key={element.name} className="p-4">
             <div className="flex flex-row items-center gap-2">
                 <header className="text-xl font-bold">{element.name}</header>
-                <Image size={8} file={Favorite} img="Favorite"/>
+                <div onClick={() => addToFavorites(element.name, element.routes, element.gtfs)}><Image size={8} file={Favorite} img="Favorite"/></div>
             </div>
             <div className="flex flex-row justify-between">
-                <div className="p-4 w-full">
+                <div className="p-4 w-full flex flex-col gap-2">
                     <header className="font-bold">Next Northbound</header> 
-                    <ul className={ isLoading ? "none" : "flex flex-col gap-2"}>
+                    <ul className={ isLoading ? "none" : "flex flex-col gap-4"}>
                         {northTimes.slice(0,3).map(el => {
                             return (
                                 <Time el={el} train={train} color={color}/>
@@ -46,9 +51,9 @@ const Stop = ({element, north, south, train, color}) => {
                         })}
                     </ul>
                 </div>
-                <div className="p-4 w-full">
+                <div className="p-4 w-full flex flex-col gap-2">
                     <header className="font-bold">Next Southbound</header>
-                    <ul className={ isLoading ? "none" : "flex flex-col gap-2"}>
+                    <ul className={ isLoading ? "none" : "flex flex-col gap-4"}>
                         {southTimes.slice(0,3).map(el => {
                             return (
                                 <Time el={el} train={train} color={color}/>

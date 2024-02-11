@@ -17,7 +17,7 @@ const Train = () => {
     async function getStations() {
         try {
             const response = await fetch (`http://localhost:3000/trains/${params.trainid}`).then(response => response.json());
-            const responseTwo = await fetch (`http://localhost:3000/trains/${params.trainid}/times`).then(response=> response.json());
+            const responseTwo = await fetch (`http://localhost:3000/trains/${params.trainid}/times`).then(response => response.json());
             const [data, dataTwo] = await Promise.all([ response, responseTwo ]);
             setStations(data.routes);
             setNorth(dataTwo.north);
@@ -55,10 +55,10 @@ const Train = () => {
     }, []);
 
     return (
-        <div className="flex flex-col items-center p-2 gap-2">
+        <div className="flex flex-col items-center p-4 gap-2">
             <header style={`${color}` !== '' ? ["N", "W", "Q", "R"].indexOf(`${params.trainid}`) < 0 ? {backgroundColor: `#${color}`, color: 'white', fontWeight: 'bold' } : {backgroundColor: `#${color}`, color: 'black', fontWeight: 'bold' } : 
             { color: 'black', fontWeight: "bold", backgroundColor: "white", border: "#D3D3D3 solid"}} className="rounded-full px-4 py-2 text-4xl font-bold">{params.trainid}</header>
-            <ul className="w-6/12">
+            <ul className="w-6/12 p-2 rounded-xl min-h-screen bg-slate-200">
                 {stations.map(element => {
                     return (
                         <Stop color={color} train={params.trainid} north={north} south={south} key={element.name} element={element}/>

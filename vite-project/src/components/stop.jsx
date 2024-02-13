@@ -44,21 +44,21 @@ const Stop = ({element, north, south, train, color}) => {
                 <div className="p-4 w-full flex flex-col gap-2">
                     <header className="font-bold">Next Northbound</header> 
                     <ul className={ isLoading ? "none" : "flex flex-col gap-4"}>
-                        {northTimes.slice(0,2).map(el => {
+                        {northTimes.length !== 0 ? northTimes.slice(0,2).map(el => {
                             return (
                                 <Time el={el} train={train} color={color}/>
                             )
-                        })}
+                        }) : <p>No Trains Available</p>}
                     </ul>
                 </div>
                 <div className="p-4 w-full flex flex-col gap-2">
                     <header className="font-bold">Next Southbound</header>
                     <ul className={ isLoading ? "none" : "flex flex-col gap-4"}>
-                        {southTimes.slice(0,2).map(el => {
+                        {southTimes.length !== 0 ? southTimes.slice(0,2).map(el => {
                             return (
                                 <Time el={el} train={train} color={color}/>
                             )
-                        })}
+                        }) : <p>No Trains Available</p> }
                     </ul>
                 </div>
             </div>

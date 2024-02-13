@@ -10,6 +10,11 @@ exports.get_train_stations = async (req, res, next) => {
     let data = await stations();
     let trains = Object.values(data);
     // grabs routes that match specific train
-    let filteredData = trains.filter(element => element.routes.indexOf(req.params.trainid.toUpperCase()) > -1).sort((a,b) => {return a.lat - b.lat});
-    return res.json({routes: filteredData});
+    if (req.params.trainid.toUpperCase() === "R") {
+        let filteredData = trains.filter(element => element.routes.indexOf(req.params.trainid.toUpperCase()) > -1 && element.routes !== "SIR").sort((a,b) => {return a.lat - b.lat});
+        return res.json({routes: filteredData});
+    } else {
+        let filteredData = trains.filter(element => element.routes.indexOf(req.params.trainid.toUpperCase()) > -1).sort((a,b) => {return a.lat - b.lat});
+        return res.json({routes: filteredData});
+    }
 }

@@ -19,6 +19,7 @@ const Train = () => {
             const response = await fetch (`http://localhost:3000/trains/${params.trainid}`).then(response => response.json());
             const responseTwo = await fetch (`http://localhost:3000/trains/${params.trainid}/times`).then(response => response.json());
             const [data, dataTwo] = await Promise.all([ response, responseTwo ]);
+            console.log(data)
             setStations(data.routes);
             setNorth(dataTwo.north);
             setSouth(dataTwo.south);

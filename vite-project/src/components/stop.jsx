@@ -1,32 +1,40 @@
 import Image from "./image";
 import Favorite from "../assets/favorite.svg";
+import Favorited from "../assets/filled_favorite.svg";
 import { useEffect } from "react";
 import { useState } from "react";
 import Time from "./time";
+import { useParams } from "react-router-dom";
+import { useContext } from "react";
+import Context from './context';
 
-const Stop = ({element, north, south, train, color}) => {
+const Stop = ({element, north, south, train}) => {
     let ignore = false;
     const [northTimes, setNorthTimes] = useState([]);
     const [southTimes, setSouthTimes] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
-
+    const {removeFromFavorites} = useContext(Context);
+    const params = useParams();
+    
     function addToFavorites(name, trains, stop) {
-       //localStorage.clear()
         localStorage.setItem(`${name}`, JSON.stringify({route: trains, id: stop}));
+    }
+
+    async function getTimes() {
+        try {
+            const response = await fetch (`http://localhost:3000/trains/${params.trainid}/times/${element.gtfs}`);
+            const data = await response.json();
+            setNorthTimes(data.north);
+            console.log(data.test)
+            setSouthTimes(data.south);
+        } catch (err) {
+            console.log(err)
+        }
     }
 
     useEffect(() => {
         if (!ignore) {
-           let newNorth = north.filter(el => el.stopId.includes(element.gtfs)).sort( function (a,b) { 
-                if (a.arrival && b.arrival) {
-                    return a.arrival.time - b.arrival.time } 
-                });
-            let newSouth = south.filter(el => el.stopId.includes(element.gtfs)).sort( function (a,b) { 
-                if (a.arrival && b.arrival) {
-                    return a.arrival.time - b.arrival.time } 
-                });
-            setNorthTimes(newNorth);
-            setSouthTimes(newSouth);
+            getTimes();
             setIsLoading(false);
         }
         return () => {
@@ -44,9 +52,9 @@ const Stop = ({element, north, south, train, color}) => {
                 <div className="p-4 w-full flex flex-col gap-2">
                     <header className="font-bold">Next Northbound</header> 
                     <ul className={ isLoading ? "none" : "flex flex-col gap-4"}>
-                        {northTimes.length !== 0 ? northTimes.slice(0,2).map(el => {
+                        {northTimes.length !== 0 ? northTimes.map(el => {
                             return (
-                                <Time el={el} train={train} color={color}/>
+                                <Time el={el} train={train}/>
                             )
                         }) : <p>No Trains Available</p>}
                     </ul>
@@ -54,9 +62,9 @@ const Stop = ({element, north, south, train, color}) => {
                 <div className="p-4 w-full flex flex-col gap-2">
                     <header className="font-bold">Next Southbound</header>
                     <ul className={ isLoading ? "none" : "flex flex-col gap-4"}>
-                        {southTimes.length !== 0 ? southTimes.slice(0,2).map(el => {
+                        {southTimes.length !== 0 ? southTimes.map(el => {
                             return (
-                                <Time el={el} train={train} color={color}/>
+                                <Time el={el} train={train}/>
                             )
                         }) : <p>No Trains Available</p> }
                     </ul>

@@ -6,7 +6,6 @@ import { useState } from 'react';
 
 function App() {
   const [trains, setTrains] = useState([]);
-  let ignore = false;
 
   async function fetchTrains() {
     try {
@@ -24,10 +23,14 @@ function App() {
     }
   }
 
+  function removeFromFavorites(name) {
+    localStorage.removeItem(`${name}`);
+}
+
   return (
     <div className='min-h-screen flex flex-col bg-gray-100'>
       <Header />
-      <Context.Provider value={{trains, setTrains, fetchTrains}}>
+      <Context.Provider value={{trains, setTrains, fetchTrains, removeFromFavorites}}>
       <Outlet />
       </Context.Provider>
     </div>

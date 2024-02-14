@@ -16,19 +16,15 @@ const Train = () => {
 
     async function getStations() {
         try {
-            const response = await fetch (`http://localhost:3000/trains/${params.trainid}`).then(response => response.json());
-            const responseTwo = await fetch (`http://localhost:3000/trains/${params.trainid}/times`).then(response => response.json());
-            const [data, dataTwo] = await Promise.all([ response, responseTwo ]);
-            console.log(data)
+            const response = await fetch (`http://localhost:3000/trains/${params.trainid}`);
+            const data  = await response.json();
             setStations(data.routes);
-            setNorth(dataTwo.north);
-            setSouth(dataTwo.south);
         } catch (err) {
             console.log(err);
         }
     }
 
-   async function fetchTrains() {
+    async function fetchTrains() {
         try {
             const response = await fetch ('http://localhost:3000/trains');
             const data = await response.json();
@@ -42,7 +38,7 @@ const Train = () => {
         } catch (err) {
           console.log(err);
         }
-      }
+    }
 
     useEffect(() => {
         if (!ignore) {
@@ -62,7 +58,7 @@ const Train = () => {
             <ul className="w-6/12 p-2 rounded-xl min-h-screen bg-slate-200">
                 {stations.map(element => {
                     return (
-                        <Stop color={color} train={params.trainid} north={north} south={south} key={element.name} element={element}/>
+                        <Stop train={params.trainid} north={north} south={south} key={element.name} element={element}/>
                     )
                 })}
             </ul>

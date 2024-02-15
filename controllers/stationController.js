@@ -1,11 +1,10 @@
 const trains = require('../trainData');
 const stations = require('../stations');
+const stops = require('../stops');
 const getRealTime = require('../realTime');
 const urlMap = require('../urlMap');
 
 exports.get_station = async (req, res, next) => {
-   const trainData = await trains();
-
    let current = (((new Date).getTime()) /1000.00);
    const stationData = await stations();
    let routes = [];
@@ -53,4 +52,10 @@ exports.get_station = async (req, res, next) => {
             return a.stopTimeUpdate.arrival.time - b.stopTimeUpdate.arrival.time
         }}).slice(0,6);
    return res.json({station, north, south});
+}
+
+exports.get_nearby_station = async (req, res, next) => {
+    const stationData = await stations();
+    let filter = ((Object.values(stationData)).filter(el => Math.abs(el.lat - req.query.lat) < 0.01 && Math.abs(el.lon - req.query.lon) < 0.01))
+    return res.json(filter);
 }

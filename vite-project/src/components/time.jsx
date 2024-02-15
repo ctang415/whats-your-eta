@@ -40,7 +40,7 @@ const Time = ({el, color, train}) => {
             return (
                 <li key={el.arrival.time} className="flex flex-row justify-between">
                     <div className="flex gap-2 items-center">
-                        <p style={`${homeColor}` !== '' ? ["N", "W", "Q", "R"].indexOf(`${train}`) < 0 ? {backgroundColor: `#${homeColor}`, color: 'white', fontWeight: 'bold' } : {backgroundColor: `#${homeColor}`, color: 'black', fontWeight: 'bold' } : { color: 'black', fontWeight: "bold", backgroundColor: "white", border: "#D3D3D3 solid"}} className="bg-slate-100 rounded-full px-3 py-1">{train}</p> 
+                        <p style={`${homeColor}` !== '' ? ["N", "W", "Q", "R", "6X"].indexOf(`${train}`) < 0 ? {backgroundColor: `#${homeColor}`, color: 'white', fontWeight: 'bold' } : {backgroundColor: `#${homeColor}`, color: 'black', fontWeight: 'bold' } : { color: 'black', fontWeight: "bold", backgroundColor: "white", border: "#D3D3D3 solid"}} className="bg-slate-100 rounded-full px-3 py-1">{train}</p> 
                         <p>{parseInt((el.arrival.time - parseInt(current))/60)} minutes away</p> 
                     </div>
                     <p>{new Date(el.arrival.time * 1000).toLocaleTimeString()}</p>
@@ -50,7 +50,7 @@ const Time = ({el, color, train}) => {
             return (
                 <li key={el.arrival.time} className="flex flex-row justify-between">
                     <div className="flex gap-2 items-center">
-                        <p style={`${homeColor}` !== '' ? ["N", "W", "Q", "R"].indexOf(`${train}`) < 0 ? {backgroundColor: `#${homeColor}`, color: 'white', fontWeight: 'bold' } : {backgroundColor: `#${homeColor}`, color: 'black', fontWeight: 'bold' } : { color: 'black', fontWeight: "bold", backgroundColor: "white", border: "#D3D3D3 solid"}} className="bg-slate-100 rounded-full px-3 py-1">{train}</p> 
+                        <p style={`${homeColor}` !== '' ? ["N", "W", "Q", "R", "6X"].indexOf(`${train}`) < 0 ? {backgroundColor: `#${homeColor}`, color: 'white', fontWeight: 'bold' } : {backgroundColor: `#${homeColor}`, color: 'black', fontWeight: 'bold' } : { color: 'black', fontWeight: "bold", backgroundColor: "white", border: "#D3D3D3 solid"}} className="bg-slate-100 rounded-full px-3 py-1">{train}</p> 
                         <p>{parseInt((el.arrival.time - parseInt(current))/60)} minutes away</p> 
                     </div>
                     <p>{new Date(el.arrival.time * 1000).toLocaleTimeString()}</p>
@@ -60,7 +60,7 @@ const Time = ({el, color, train}) => {
             return (
                 <li key={el.departure.time} className="flex flex-row justify-between">
                     <div className="flex gap-2 items-center">
-                        <p style={`${color}` !== '' ? ["N", "W", "Q", "R"].indexOf(`${train}`) < 0 ? {backgroundColor: `#${homeColor}`, color: 'white', fontWeight: 'bold' } : {backgroundColor: `#${homeColor}`, color: 'black', fontWeight: 'bold' } : { color: 'black', fontWeight: "bold", backgroundColor: "white", border: "#D3D3D3 solid"}} className="bg-slate-100 rounded-full px-3 py-1">{train}</p> 
+                        <p style={`${color}` !== '' ? ["N", "W", "Q", "R", "6X"].indexOf(`${train}`) < 0 ? {backgroundColor: `#${homeColor}`, color: 'white', fontWeight: 'bold' } : {backgroundColor: `#${homeColor}`, color: 'black', fontWeight: 'bold' } : { color: 'black', fontWeight: "bold", backgroundColor: "white", border: "#D3D3D3 solid"}} className="bg-slate-100 rounded-full px-3 py-1">{train}</p> 
                         <p>{parseInt((el.departure.time - parseInt(current))/60)} minutes away</p> 
                     </div>
                     <p>{new Date(el.departure.time * 1000).toLocaleTimeString()}</p>

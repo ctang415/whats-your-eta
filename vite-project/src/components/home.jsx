@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import Time from "./time";
 import Image from "./image";
 import Favorited from "../assets/filled_favorite.svg";
-import Favorite from "../assets/favorite.svg";
 import { useContext } from "react";
 import { Context } from "./context";
 
@@ -17,7 +16,6 @@ const Home = () => {
             const response = await fetch (`http://localhost:3000/favorites/${trains}?station=${station}&name=${name}`);
             const data = await response.json();
             setFavorites(favorites =>[...favorites, data]);
-            setIsLoading(false);
         } catch (err) {
             console.log(err);
         }
@@ -36,6 +34,7 @@ const Home = () => {
     useEffect(() => {
         if (!ignore){
             mapFavorites();
+            setIsLoading(false);
         } return () => {
             ignore = true;
         }
@@ -48,6 +47,7 @@ const Home = () => {
         }, 60000);
         return () => clearInterval(interval);
       }, [])
+
 
     function updateFavorites(name) {
         setFavorites(favorites.filter(element => element.station !== name))

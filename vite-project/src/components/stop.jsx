@@ -8,7 +8,7 @@ import { useParams } from "react-router-dom";
 import { useContext } from "react";
 import { Context } from './context';
 
-const Stop = ({element, train}) => {
+const Stop = ({element, train, color}) => {
     let ignore = false;
     const [northTimes, setNorthTimes] = useState([]);
     const [southTimes, setSouthTimes] = useState([]);
@@ -60,7 +60,7 @@ const Stop = ({element, train}) => {
                     <ul className={ isLoading ? "none" : "flex flex-col gap-4"}>
                         {northTimes.length !== 0 ? northTimes.map(el => {
                             return (
-                                <Time el={el} train={train}/>
+                                <Time el={el} color={color} train={train}/>
                             )
                         }) : <p>No Trains Available</p>}
                     </ul>
@@ -70,7 +70,7 @@ const Stop = ({element, train}) => {
                     <ul className={ isLoading ? "none" : "flex flex-col gap-4"}>
                         {southTimes.length !== 0 ? southTimes.map(el => {
                             return (
-                                <Time el={el} train={train}/>
+                                <Time el={el} color={color} train={train}/>
                             )
                         }) : <p>No Trains Available</p> }
                     </ul>

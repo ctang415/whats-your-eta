@@ -69,7 +69,7 @@ const Train = () => {
             <ul className="w-6/12 p-2 rounded-xl min-h-screen bg-slate-200">
                 {stations.map(element => {
                     return (
-                        <Stop train={params.trainid} key={element.name} element={element}/>
+                        <Stop train={params.trainid} color={color} key={element.name} element={element}/>
                     )
                 })}
             </ul>

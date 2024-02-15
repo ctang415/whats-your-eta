@@ -1,10 +1,8 @@
 import { useEffect } from "react";
 import { useState } from "react";
-import { useParams } from "react-router-dom";
 
 const Time = ({el, train}) => {
     const [current, setCurrent] = useState(((new Date).getTime()) /1000.00);
-    const params = useParams();
     const [color, setColor] = useState();
 
     useEffect(() => {

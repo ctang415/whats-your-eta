@@ -6,6 +6,7 @@ import App from "./App";
 import Home from "./components/home";
 import Train from "./components/train";
 import Trains from "./components/trains";
+import Buses from "./components/buses";
 
 const Router = () => {
     const router = createBrowserRouter([
@@ -23,6 +24,10 @@ const Router = () => {
         {
           path: "/trains/:trainid",
           element: <Train/>
+        },
+        {
+          path: "/buses",
+          element: <Buses/>
         }
       ]
     }

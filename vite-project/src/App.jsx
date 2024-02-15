@@ -3,9 +3,12 @@ import { Outlet } from 'react-router-dom';
 import Header from './components/header';
 import { Context } from './components/context';
 import { useState } from 'react';
+import { useEffect } from 'react';
 
 function App() {
   const [trains, setTrains] = useState([]);
+  const [list, setList] = useState('');
+  let ignore = false;
 
   async function fetchTrains() {
     try {
@@ -25,12 +28,22 @@ function App() {
 
   function removeFromFavorites(name) {
     localStorage.removeItem(`${name}`);
+    setList(Object.keys(localStorage));
 }
+
+  useEffect(() => {
+    if (!ignore) {
+      setList(Object.keys(localStorage));
+    }
+    return () => {
+      ignore = true;
+    }
+  }, [])
 
   return (
     <div className='min-h-screen flex flex-col bg-gray-100'>
       <Header />
-      <Context.Provider value={{trains, setTrains, fetchTrains, removeFromFavorites}}>
+      <Context.Provider value={{trains, setTrains, fetchTrains, removeFromFavorites, setList, list}}>
       <Outlet />
       </Context.Provider>
     </div>

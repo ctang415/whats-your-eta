@@ -6,5 +6,7 @@ export const Context = createContext({
     trains: null,
     setColors: () => {},
     colors: null,
-    removeFromFavorites: () => {}
+    removeFromFavorites: () => {},
+    setList: () => {},
+    list: null
 });

@@ -8,12 +8,11 @@ import { useParams } from "react-router-dom";
 import { useContext } from "react";
 import { Context } from './context';
 
-const Stop = ({element, north, south, train}) => {
+const Stop = ({element, train}) => {
     let ignore = false;
     const [northTimes, setNorthTimes] = useState([]);
     const [southTimes, setSouthTimes] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
-    const [ image, setImage] = useState(false);
     const {removeFromFavorites, list, setList} = useContext(Context);
     const params = useParams();
     
@@ -48,10 +47,10 @@ const Stop = ({element, north, south, train}) => {
         <li key={element.name} className="p-4">
             <div className="flex flex-row items-center gap-2">
                 <header className="text-xl font-bold">{element.name}</header>
-                <div className={ list.includes(element.name) ? "hidden" : "display"} onClick={() => {addToFavorites(element.name, element.routes, element.gtfs); setImage(false)}}>
+                <div className={ list.includes(element.name) ? "hidden" : "display"} onClick={() => addToFavorites(element.name, element.routes, element.gtfs)}>
                     <Image size={8} file={Favorite} img="Favorite"/>
                 </div>
-                <div className={ list.includes(element.name) ? "display" : "hidden" } onClick={() => {removeFromFavorites(element.name); setImage(true) }}>
+                <div className={ list.includes(element.name) ? "display" : "hidden" } onClick={() => removeFromFavorites(element.name)}>
                     <Image size={8} file={Favorited} img="Favorited"/>
                 </div>
             </div>

@@ -1,15 +1,12 @@
 import { useState } from "react";
-import { useContext } from "react";
 import { useEffect } from "react";
-import { useParams } from "react-router-dom";
-import { Context } from "./context";
+import { useNavigate, useParams } from "react-router-dom";
 import Stop from "./stop";
 
 const Train = () => {
     const params = useParams();
+    const navigate = useNavigate();
     const [stations, setStations] = useState([]);
-    const [ north, setNorth] = useState([]);
-    const [ south, setSouth] = useState([]);
     const [color, setColor] = useState('');
     const [isLoading, setIsLoading] = useState(true);
     let ignore = false;
@@ -41,6 +38,13 @@ const Train = () => {
     }
 
     useEffect(() => {
+        if (params.trainid === params.trainid.toLowerCase()) {
+            let uppercase = params.trainid.toUpperCase();
+            navigate(`/trains/${uppercase}`);
+        }
+    }, [])
+
+    useEffect(() => {
         if (!ignore) {
             getStations();
             fetchTrains();
@@ -51,6 +55,13 @@ const Train = () => {
         }
     }, []);
 
+    useEffect(() => {
+        const interval = setInterval(() => {
+            getStations();
+        }, 60000);
+        return () => clearInterval(interval);
+    }, [])
+
     return (
         <div className="flex flex-col items-center p-4 gap-2">
             <header style={`${color}` !== '' ? ["N", "W", "Q", "R"].indexOf(`${params.trainid}`) < 0 ? {backgroundColor: `#${color}`, color: 'white', fontWeight: 'bold' } : {backgroundColor: `#${color}`, color: 'black', fontWeight: 'bold' } : 
@@ -58,7 +69,7 @@ const Train = () => {
             <ul className="w-6/12 p-2 rounded-xl min-h-screen bg-slate-200">
                 {stations.map(element => {
                     return (
-                        <Stop train={params.trainid} north={north} south={south} key={element.name} element={element}/>
+                        <Stop train={params.trainid} key={element.name} element={element}/>
                     )
                 })}
             </ul>

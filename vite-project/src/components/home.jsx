@@ -41,6 +41,14 @@ const Home = () => {
         }
     }, []);
 
+    useEffect(() => {
+        const interval = setInterval(() => {
+          setFavorites([]);
+          mapFavorites();
+        }, 60000);
+        return () => clearInterval(interval);
+      }, [])
+
     function updateFavorites(name) {
         setFavorites(favorites.filter(element => element.station !== name))
     }

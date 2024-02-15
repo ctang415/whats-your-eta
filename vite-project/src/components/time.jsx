@@ -1,29 +1,15 @@
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 import { useState } from "react";
+import { Context } from "./context";
 
 const Time = ({el, train}) => {
+    const {trains} = useContext(Context);
     const [current, setCurrent] = useState(((new Date).getTime()) /1000.00);
-    const [color, setColor] = useState();
+    //const [color, setColor] = useState(trains.flat().find(x => x.name == train).color);
+    const [ color, setColor] = useState('')
+    let ignore = false;
 
-    useEffect(() => {
-        async function fetchTrains(value) {
-            try {
-                const response = await fetch ('http://localhost:3000/trains');
-                const data = await response.json();
-                function groupBy(obj, key) {
-                    return obj.reduce(function(rv, x) {(rv[x[key]] = rv[x[key]] || []).push(x);
-                    return rv;
-                    }, {});
-                };
-                setColor(Object.values(groupBy(Object.values(data), 'color')).flat().find(x => x.name == value).color);
-            } catch (err) {
-                console.log(err);
-            }
-        }
-        fetchTrains(train);
-    }, [])
-
-        if (el.arrival && el.departure && parseInt((el.arrival.time - parseInt(current))/60) >= 0) {
+    if (el.arrival && el.departure && parseInt((el.arrival.time - parseInt(current))/60) >= 0) {
         return (
             <li key={el.arrival.time} className="flex flex-row justify-between">
                 <div className="flex gap-2 items-center">

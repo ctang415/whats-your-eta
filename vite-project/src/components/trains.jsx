@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { useEffect, useState } from "react"
-import { Link } from "react-router-dom";
+import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
 import { Context } from "./context";
 
 const Trains = () => {

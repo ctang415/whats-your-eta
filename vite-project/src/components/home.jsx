@@ -4,6 +4,7 @@ import Image from "./image";
 import Favorited from "../assets/filled_favorite.svg";
 import { useContext } from "react";
 import { Context } from "./context";
+import Alert from "./alert";
 
 const Home = () => {
     const [favorites, setFavorites] = useState([]);
@@ -18,7 +19,6 @@ const Home = () => {
             const response = await fetch (`http://localhost:3000/favorites/${trains}?station=${station}&name=${name}`);
             const data = await response.json();
             setFavorites(favorites =>[...favorites, data]);
-            console.log(data)
         } catch (err) {
             console.log(err);
         }
@@ -49,7 +49,6 @@ const Home = () => {
             console.log(err);
         }
     }
-
 
     function mapNearby() {
         for (let i = 0; i < stations.length; i++) {
@@ -93,7 +92,7 @@ const Home = () => {
     useEffect(() => {
         if (nearbyStations) {
             function successFunction(position) {
-                console.log(position);
+                setFavorites([]);
                 getNearbyStations(position);
             }
           
@@ -109,17 +108,19 @@ const Home = () => {
         }
     }, [nearbyStations])
 
-
     if (favorites.length === 0) {
         return (
-            <div className="text-center">
+            <div className="flex flex-col self-center w-6/12 p-2 rounded-xl min-h-screen items-center text-center">
                 No favorites saved
-                <button onClick={() => setNearbyStations(true)}>Check Nearby Stations</button>
+                <button className="p-4 bg-blue-500 text-white rounded-full font-bold" onClick={() => setNearbyStations(true)}>Check Nearby Stations</button>
             </div>
         )
     } else {
     return (
         <div className="flex flex-col self-center w-6/12 p-2 rounded-xl min-h-screen bg-slate-200">
+            <div className="self-center">
+                <button className="p-4 bg-blue-500 text-white rounded-full font-bold" onClick={() => setNearbyStations(true)}>Check Nearby Stations</button>
+            </div>
             {favorites.map(favorite => {
                 return (
                     <div className="p-4"> 
@@ -129,6 +130,13 @@ const Home = () => {
                                 <Image size={8} file={Favorited} img="Favorited"/>
                             </div>
                         </div>
+                        <ul className="flex flex-col gap-2">
+                            {Object.entries(favorite.alerts).map(([name, obj]) => ({name, ...obj})).map(el =>{
+                                return (
+                                    <Alert alert={el}/>
+                                )
+                            })}
+                        </ul>
                         <div className="flex flex-row justify-between">
                             <div className="p-4 w-full flex flex-col gap-2">
                                 <header className="font-bold">Next Northbound</header> 

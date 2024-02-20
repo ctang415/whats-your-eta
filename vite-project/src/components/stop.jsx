@@ -16,8 +16,8 @@ const Stop = ({element, train, color}) => {
     const {removeFromFavorites, list, setList} = useContext(Context);
     const params = useParams();
     
-    function addToFavorites(name, trains, stop) {
-        localStorage.setItem(`${name}`, JSON.stringify({route: trains, id: stop}));
+    function addToFavorites(name, trains, stop, stationId) {
+        localStorage.setItem(`${name}`, JSON.stringify({route: trains, id: stop, station_id: stationId}));
         setList(Object.keys(localStorage));
     }
 
@@ -42,12 +42,16 @@ const Stop = ({element, train, color}) => {
         }
     }, []);
 
+    useEffect(() => {
+        console.log(element)
+    }, [])
+
 
     return (
         <li key={element.name} className="p-4">
             <div className="flex flex-row items-center gap-2">
                 <header className="text-xl font-bold">{element.name}</header>
-                <div className={ list.includes(element.name) ? "hidden" : "display"} onClick={() => addToFavorites(element.name, element.routes, element.gtfs)}>
+                <div className={ list.includes(element.name) ? "hidden" : "display"} onClick={() => addToFavorites(element.name, element.routes, element.gtfs, element.station_id)}>
                     <Image size={8} file={Favorite} img="Favorite"/>
                 </div>
                 <div className={ list.includes(element.name) ? "display" : "hidden" } onClick={() => removeFromFavorites(element.name)}>

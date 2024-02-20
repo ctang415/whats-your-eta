@@ -3,6 +3,7 @@ const stations = require('../stations');
 const stops = require('../stops');
 const getRealTime = require('../realTime');
 const urlMap = require('../urlMap');
+const fetchAlerts = require('../alerts');
 
 exports.get_station = async (req, res, next) => {
    let current = (((new Date).getTime()) /1000.00);
@@ -11,7 +12,7 @@ exports.get_station = async (req, res, next) => {
    let validStops = [];
    let station = req.query.name;
    let sorted = [];
-   
+
    //get all trains by station
    function getAllTrains() {
         let x = (Object.values(stationData).filter(el => el.name === req.query.name));
@@ -20,7 +21,6 @@ exports.get_station = async (req, res, next) => {
             validStops.push(x[i].gtfs);
         }
         return routes = routes.reduce((acc, curr) => ([...acc, ...curr]), []);
-
    }
    getAllTrains();
 
@@ -43,6 +43,15 @@ exports.get_station = async (req, res, next) => {
     }
 
     let times = await getRoutes();
+
+    let alerts = await fetchAlerts();
+    alerts = alerts.filter(el => el.informed_entity.some(route => routes.includes(route.route_id))).filter(el => el.informed_entity.some(route => route.stop_id == req.query.station)).reduce(function(acc, item) {
+        (acc[item.informed_entity[0].route_id] || (acc[item.informed_entity[0].route_id] = [])).push(item.header_text.translation[0].text);
+            return acc;
+        }, {})
+        
+    //alerts = alerts.filter(el => el.informed_entity.some(route => routes.includes(route.route_id))).filter(el => el.informed_entity.some(route => route.stop_id == req.query.station))
+    
     const north = sorted.filter(el => el.stopTimeUpdate.stopId.slice(-1) == "N").filter(el => !el.stopTimeUpdate.arrival ? parseInt((el.stopTimeUpdate.departure.time - parseInt(current))/60) >= 0 : parseInt((el.stopTimeUpdate.arrival.time - parseInt(current))/60) >= 0).sort((a,b) => {
         if (a.stopTimeUpdate.arrival && b.stopTimeUpdate.arrival) {
             return a.stopTimeUpdate.arrival.time - b.stopTimeUpdate.arrival.time
@@ -51,7 +60,8 @@ exports.get_station = async (req, res, next) => {
         if (a.stopTimeUpdate.arrival && b.stopTimeUpdate.arrival) {
             return a.stopTimeUpdate.arrival.time - b.stopTimeUpdate.arrival.time
         }}).slice(0,6);
-   return res.json({station, north, south});
+
+   return res.json({station, alerts, north, south});
 }
 
 exports.get_nearby_station = async (req, res, next) => {

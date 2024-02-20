@@ -27,7 +27,7 @@ const Time = ({el, color, train}) => {
                         console.log(err);
                     }
                 }
-                fetchTrains()
+                fetchTrains();
             }
         }
         return () => {

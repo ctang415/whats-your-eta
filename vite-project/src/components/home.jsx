@@ -119,7 +119,7 @@ const Home = () => {
     return (
         <div className="flex flex-col self-center w-6/12 p-2 rounded-xl min-h-screen bg-slate-200">
             <div className="self-center">
-                <button className="p-4 bg-blue-500 text-white rounded-full font-bold" onClick={() => setNearbyStations(true)}>Check Nearby Stations</button>
+                <button className="p-4 bg-blue-500 text-white rounded-full font-bold hover:scale-105" onClick={() => setNearbyStations(true)}>Check Nearby Stations</button>
             </div>
             {favorites.map(favorite => {
                 return (

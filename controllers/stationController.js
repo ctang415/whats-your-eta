@@ -48,10 +48,8 @@ exports.get_station = async (req, res, next) => {
     alerts = alerts.filter(el => el.informed_entity.some(route => routes.includes(route.route_id))).filter(el => el.informed_entity.some(route => route.stop_id == req.query.station)).reduce(function(acc, item) {
         (acc[item.informed_entity[0].route_id] || (acc[item.informed_entity[0].route_id] = [])).push(item.header_text.translation[0].text);
             return acc;
-        }, {})
+        }, {});
         
-    //alerts = alerts.filter(el => el.informed_entity.some(route => routes.includes(route.route_id))).filter(el => el.informed_entity.some(route => route.stop_id == req.query.station))
-    
     const north = sorted.filter(el => el.stopTimeUpdate.stopId.slice(-1) == "N").filter(el => !el.stopTimeUpdate.arrival ? parseInt((el.stopTimeUpdate.departure.time - parseInt(current))/60) >= 0 : parseInt((el.stopTimeUpdate.arrival.time - parseInt(current))/60) >= 0).sort((a,b) => {
         if (a.stopTimeUpdate.arrival && b.stopTimeUpdate.arrival) {
             return a.stopTimeUpdate.arrival.time - b.stopTimeUpdate.arrival.time

@@ -1,10 +1,8 @@
 const getBusTime = require('../busData');
+const getBusRealTime = require('../busRealTime');
 
 exports.get_bus = async (req, res, next) => {
-    console.log(req.params)
     const data = await getBusTime(req.params.busid.toUpperCase());
-    console.log(data);
-
     if (data.code === 404) {
         return res.status(404).json("Bus not found.");
     }
@@ -12,15 +10,50 @@ exports.get_bus = async (req, res, next) => {
 }
 
 exports.get_nearby_buses = async (req, res, next) => {
+    let current = (((new Date).getTime()) /1000.00);
+    let stops = {};
     async function getNearbyBuses() {
         try {
             const response = await fetch (`https://bustime.mta.info/api/where/stops-for-location.json?lat=${req.query.lat}&lon=${req.query.lon}&latSpan=0.005&lonSpan=0.005&key=${process.env.BUS_KEY}`)
             const data = await response.json();
+            if (!response.ok) {
+                throw await response.json();
+            }
             return data;
         } catch (err) {
-            console.log(err)
+            console.log(err);
         }
     }
-    const buses = await getNearbyBuses()
-    return res.json(buses.data);
+    const buses = await getNearbyBuses();
+    
+    function addStops() {
+        for (let i = 0; i < buses.data.stops.length; i++) {
+            for (let j = 0; j < buses.data.stops[i].routes.length; j++) {
+                if (!stops[buses.data.stops[i].code]) {
+                    stops[buses.data.stops[i].code] = [buses.data.stops[i].routes[j].shortName];
+                } else {
+                    stops[buses.data.stops[i].code].push(buses.data.stops[i].routes[j].shortName)
+                }
+            }
+        }
+    }
+    addStops();
+    console.log(Object.keys(stops));
+
+    let data = await getBusRealTime();
+    let filtered = data.filter(el => Object.values(stops).flat().includes(el.trip.routeId)).map(e => { return {...e, stopTimeUpdate: e.stopTimeUpdate.filter(x => Object.keys(stops).indexOf(x.stopId) > -1)}}).filter(el => Object.keys(el.stopTimeUpdate).length !== 0).flat().sort((a,b) => {
+        if (a.stopTimeUpdate[0].arrival && b.stopTimeUpdate[0].arrival) {
+            return a.stopTimeUpdate[0].arrival.time - b.stopTimeUpdate[0].arrival.time
+        }}).slice(0,10);
+
+    if (buses.code === 404 || buses.fieldErrors) {
+        return res.status(404).json("Resource not found.");
+    }
+    return res.json({stops: buses.data.stops, filtered});
+}
+
+
+exports.get_realtime = async (req, res, next) => {
+    let data = await getBusRealTime();
+    return res.json(data);
 }

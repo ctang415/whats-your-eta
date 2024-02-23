@@ -101,11 +101,11 @@ const Buses = () => {
                         <button className="p-2 bg-blue-500 text-white rounded-full font-bold hover:scale-105" onClick={() => setNearbyBuses(true)}>Check Nearby Stops</button>
                     </div>
                 </div>
-                <ul className="flex flex-col gap-3 items-center list-disc">
-                <h3 className="font-bold text-3xl">{buses.route.shortName}</h3>
+                <ul className="flex flex-col gap-1 p-2">
+                <h3 className="font-bold text-3xl text-center">{buses.route.shortName}</h3>
                     {buses.stops.map(bus => {
                         return (
-                            <BusStops bus={bus}/>
+                            <BusStops search={search} bus={bus}/>
                         )
                     })}
                 </ul>

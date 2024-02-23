@@ -2,11 +2,20 @@ const getBusTime = require('../busData');
 const getBusRealTime = require('../busRealTime');
 
 exports.get_bus = async (req, res, next) => {
-    const data = await getBusTime(req.params.busid.toUpperCase());
-    if (data.code === 404) {
-        return res.status(404).json("Bus not found.");
+    if (req.query.stop !== undefined) {
+        let busData = await getBusRealTime();
+        let filtered = busData.filter(el => el.trip.routeId == req.query.bus.toUpperCase()).map(e => { return {...e, stopTimeUpdate: e.stopTimeUpdate.filter(x => req.query.stop == x.stopId) }}).filter(el => Object.keys(el.stopTimeUpdate).length !== 0).flat().sort((a,b) => {
+            if (a.stopTimeUpdate[0].arrival && b.stopTimeUpdate[0].arrival) {
+                return a.stopTimeUpdate[0].arrival.time - b.stopTimeUpdate[0].arrival.time
+            }}).slice(0,3);
+        return res.json(filtered);
+    } else {
+        const data = await getBusTime(req.params.busid.toUpperCase());
+        if (data.code === 404) {
+            return res.status(404).json("Bus not found.");
+        }
+        return res.json({route: data.data.route, stops: data.data.stops});
     }
-    return res.json({route: data.data.route, stops: data.data.stops});
 }
 
 exports.get_nearby_buses = async (req, res, next) => {
@@ -38,7 +47,6 @@ exports.get_nearby_buses = async (req, res, next) => {
         }
     }
     addStops();
-    console.log(Object.keys(stops));
 
     let data = await getBusRealTime();
     let filtered = data.filter(el => Object.values(stops).flat().includes(el.trip.routeId)).map(e => { return {...e, stopTimeUpdate: e.stopTimeUpdate.filter(x => Object.keys(stops).indexOf(x.stopId) > -1)}}).filter(el => Object.keys(el.stopTimeUpdate).length !== 0).flat().sort((a,b) => {
@@ -50,10 +58,4 @@ exports.get_nearby_buses = async (req, res, next) => {
         return res.status(404).json("Resource not found.");
     }
     return res.json({stops: buses.data.stops, filtered});
-}
-
-
-exports.get_realtime = async (req, res, next) => {
-    let data = await getBusRealTime();
-    return res.json(data);
 }

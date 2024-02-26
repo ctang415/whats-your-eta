@@ -1,5 +1,6 @@
 const getBusTime = require('../busData');
 const getBusRealTime = require('../busRealTime');
+const getBusAlerts = require('../busAlerts');
 
 exports.get_bus = async (req, res, next) => {
     if (req.query.stop !== undefined) {
@@ -19,7 +20,6 @@ exports.get_bus = async (req, res, next) => {
 }
 
 exports.get_nearby_buses = async (req, res, next) => {
-    let current = (((new Date).getTime()) /1000.00);
     let stops = {};
     async function getNearbyBuses() {
         try {
@@ -49,6 +49,12 @@ exports.get_nearby_buses = async (req, res, next) => {
     addStops();
 
     let data = await getBusRealTime();
+    let alerts = await getBusAlerts();
+    
+    //test = alerts.map((el) => { return {...el, informedEntity: el.informedEntity.map(x => x.trip) }}).map((el) => { return {...el, informedEntity: el.informedEntity }})
+    //alerts = alerts.filter(el => el.informedEntity.some(x => (Object.values(stops).flat()).includes(x.routeId)));
+
+
     let filtered = data.filter(el => Object.values(stops).flat().includes(el.trip.routeId)).map(e => { return {...e, stopTimeUpdate: e.stopTimeUpdate.filter(x => Object.keys(stops).indexOf(x.stopId) > -1)}}).filter(el => Object.keys(el.stopTimeUpdate).length !== 0).flat().sort((a,b) => {
         if (a.stopTimeUpdate[0].arrival && b.stopTimeUpdate[0].arrival) {
             return a.stopTimeUpdate[0].arrival.time - b.stopTimeUpdate[0].arrival.time
@@ -57,5 +63,5 @@ exports.get_nearby_buses = async (req, res, next) => {
     if (buses.code === 404 || buses.fieldErrors) {
         return res.status(404).json("Resource not found.");
     }
-    return res.json({stops: buses.data.stops, filtered});
+    return res.json({stops: buses.data.stops, filtered, alerts});
 }

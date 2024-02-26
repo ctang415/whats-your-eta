@@ -1,8 +1,7 @@
 import { useEffect } from "react";
 import { useState } from "react";
 
-const BusSearchTime = ({times, code, stop, time}) => {
-    const [current, setCurrent] = useState(((new Date).getTime()) /1000.00);
+const BusSearchTime = ({times, code, stop, time, current}) => {
 
     if (time) {
         return (

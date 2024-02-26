@@ -7,9 +7,11 @@ import { Context } from "./context";
 import Alert from "./alert";
 
 const Home = () => {
+    const [current, setCurrent] = useState(((new Date).getTime()) /1000.00);
     const [favorites, setFavorites] = useState([]);
+    const [busFavorites, setBusFavorites] = useState([]);
     const [ isLoading, setIsLoading] = useState(true);
-    const {removeFromFavorites} = useContext(Context);
+    const {removeFromFavorites, removeFromBusFavorites} = useContext(Context);
     const [nearbyStations, setNearbyStations] = useState(false);
     const [stations, setStations] = useState([]);
     let ignore = false;
@@ -23,13 +25,38 @@ const Home = () => {
             console.log(err);
         }
     }
+    
+    async function getBuses(buses, name, code) {
+        try {
+            const response = await fetch (`http://localhost:3000/favorites/${buses}?name=${name}&code=${code}`);
+            const data = await response.json();
+            setBusFavorites(favorites => [...favorites, data]);
+            console.log(data)
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
     function mapFavorites() {
-        for (let i = 0; i < localStorage.length; i++) {
-            getStations(
-                JSON.parse(Object.values(localStorage)[i]).route.replace(/\s/g, ''),
-                JSON.parse(Object.values(localStorage)[i]).id,
-                Object.keys(localStorage)[i]
+        if (JSON.parse(localStorage.getItem("trains")) !== null) {  
+            let x = JSON.parse(localStorage.getItem("trains"));
+            for (let i = 0; i < x.length; i++) {
+                getStations(
+                (x[i]).route.replace(/\s/g, ''),
+                (x[i]).id,
+                (x[i].name)
             );
+        }
+    }
+        if (JSON.parse(localStorage.getItem("buses")) !== null) {  
+            let x = JSON.parse(localStorage.getItem("buses"));
+            for (let i = 0; i < x.length; i++) {
+                getBuses(
+                    x[i].buses.map(x => x.shortName),
+                    x[i].stop,
+                    x[i].code
+                )
+            }
         }
     }
 
@@ -87,7 +114,7 @@ const Home = () => {
           }, 60000);
           return () => clearInterval(interval);
     }
-      }, [])
+      }, []);
 
     useEffect(() => {
         if (nearbyStations) {
@@ -106,9 +133,9 @@ const Home = () => {
                 console.log("Geolocation is not supported by this browser.");
             }
         }
-    }, [nearbyStations])
+    }, [nearbyStations]);
 
-    if (favorites.length === 0) {
+    if (favorites.length === 0 && busFavorites.length === 0) {
         return (
             <div className="flex flex-col self-center w-6/12 p-2 rounded-xl min-h-screen items-center text-center">
                 No favorites saved
@@ -162,6 +189,23 @@ const Home = () => {
                     </div>
                 )
             })}
+            <ul>
+                {busFavorites.map(bus => {
+                    return (
+                        <li>
+                            <h3>{bus.name}</h3>
+                            {bus.times.map( (time, index) => {
+                                return (
+                                    <li key={index} className="display flex justify-between">
+                                        <p>{parseInt((time.stopTimeUpdate[0].arrival.time - parseInt(current))/60)} minutes away</p>
+                                        <p>{new Date(time.stopTimeUpdate[0].arrival.time * 1000).toLocaleTimeString()}</p>
+                                    </li>
+                                )
+                            })}
+                        </li>
+                    ) 
+                })}
+            </ul>
         </div>
     )}
 }

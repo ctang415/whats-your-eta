@@ -8,5 +8,7 @@ export const Context = createContext({
     colors: null,
     removeFromFavorites: () => {},
     setList: () => {},
-    list: null
+    list: null,
+    setBusList: () => {},
+    busList: null
 });

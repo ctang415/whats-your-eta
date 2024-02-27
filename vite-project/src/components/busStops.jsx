@@ -44,7 +44,6 @@ const BusStops = ({bus, search}) => {
             }
         }
         setBusList(JSON.parse(localStorage.getItem("buses")));
-        console.log(busList);
     }
 
     useEffect(() => {
@@ -61,7 +60,7 @@ const BusStops = ({bus, search}) => {
     return (
         <li className="flex flex-col gap-1 p-2 rounded-md bg-slate-300" key={bus.code}>
             <div className="flex flex-row gap-2">
-                <p onClick={() => {setRoutes(!routes); setTime(false)}} className="font-bold cursor-pointer">{bus.name}</p>
+                <p onClick={() => {setRoutes(!routes); setTime(false); setStopId(''); setBusId(''); setCode('')}} className="font-bold cursor-pointer">{bus.name}</p>
                 <div className={busList && busList.some( y => y.stop == bus.name) ? "hidden" : "display"} onClick={() => addToFavorites(bus.routes, bus.name, bus.code)}>
                     <Image size={8} file={Favorite} img="Favorite"/>
                 </div>
@@ -69,11 +68,11 @@ const BusStops = ({bus, search}) => {
                     <Image size={8} file={Favorited} img="Favorited"/>
                 </div>
             </div>
-            <div>
+            <div className="flex flex-col gap-2">
                 {bus.routes.map((stop, index) => {
                     return (
-                        <div key={index}>
-                            <div onClick={() => {searchRoute(bus.code, stop.shortName); setStopId(bus.code); setBusId(stop.shortName); setCode(stop.shortName)}} className={routes ? "display flex gap-2 cursor-pointer" : "hidden"}>
+                        <div key={index} className="flex flex-col gap-4">
+                            <div onClick={() => {setStopId(bus.code); setBusId(stop.shortName); setCode(stop.shortName); searchRoute(bus.code, stop.shortName)}} className={routes ? "display flex gap-2 cursor-pointer bg-blue-700 text-white rounded-md p-2" : "hidden"}>
                                 <p className="font-semibold">{stop.shortName}</p> 
                                 <p>{stop.longName}</p>
                             </div>

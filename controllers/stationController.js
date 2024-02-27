@@ -70,7 +70,7 @@ exports.get_station = async (req, res, next) => {
         let times = [];
         let alerts = await getBusAlerts();    
         alerts = alerts.map((el) => { return {...el, informedEntity: el.informedEntity.map(x => x.trip) }}).map(el => {return {...el, informedEntity: el.informedEntity.filter(y => y ? routes.includes(y.routeId) : null)}}).filter(el => el.informedEntity.length !== 0).reduce(function(acc, item) {
-            (acc[item.informedEntity[0].routeId] || (acc[item.informedEntity[0].routeId] = [])).push(item.headerText.translation[0].text);
+            (acc[item.informedEntity[0].routeId] || (acc[item.informedEntity[0].routeId] = [])).push(item.descriptionText.translation[0].text);
             return acc;
             }, {});
    

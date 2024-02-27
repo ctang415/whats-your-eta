@@ -14,7 +14,7 @@ exports.get_bus = async (req, res, next) => {
         const data = await getBusTime(req.params.busid.toUpperCase());
         let alerts = await getBusAlerts();    
         alerts = alerts.map((el) => { return {...el, informedEntity: el.informedEntity.map(x => x.trip) }}).map(el => {return {...el, informedEntity: el.informedEntity.filter(y => y ? req.params.busid.toUpperCase() == y.routeId : null)}}).filter(el => el.informedEntity.length !== 0).reduce(function(acc, item) {
-            (acc[item.informedEntity[0].routeId] || (acc[item.informedEntity[0].routeId] = [])).push(item.headerText.translation[0].text);
+            (acc[item.informedEntity[0].routeId] || (acc[item.informedEntity[0].routeId] = [])).push(item.descriptionText.translation[0].text);
             return acc;
             }, {});
     
@@ -58,7 +58,7 @@ exports.get_nearby_buses = async (req, res, next) => {
     let alerts = await getBusAlerts();
     
     alerts = alerts.map((el) => { return {...el, informedEntity: el.informedEntity.map(x => x.trip) }}).map(el => {return {...el, informedEntity: el.informedEntity.filter(y => y ? (Object.values(stops).flat()).includes(y.routeId) : null)}}).filter(el => el.informedEntity.length !== 0).reduce(function(acc, item) {
-        (acc[item.informedEntity[0].routeId] || (acc[item.informedEntity[0].routeId] = [])).push(item.headerText.translation[0].text);
+        (acc[item.informedEntity[0].routeId] || (acc[item.informedEntity[0].routeId] = [])).push(item.descriptionText.translation[0].text);
         return acc;
         }, {});
 

@@ -69,7 +69,7 @@ const Buses = () => {
             } else {
                 console.log("Geolocation is not supported by this browser.");
             }
-        }
+        }  
     }, [nearbyBuses]);
 
     if (!searched) {

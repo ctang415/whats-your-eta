@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useEffect } from "react"
 import Bus from "./bus";
+import BusAlert from "./busAlert";
 import BusStops from "./busStops";
 
 const Buses = () => {
@@ -10,11 +11,13 @@ const Buses = () => {
     const [searched, setSearched] = useState(false);
     const [error, setError] = useState('');
     const [busTimes, setBusTimes] = useState([]);
+    const [alerts, setAlerts] = useState([]);
 
     async function getBusData(e) {
         e.preventDefault();
         setSearched(false);
         setBuses([]);
+        setAlerts([]);
         setError('');
         try {
             const response = await fetch (`http://localhost:3000/buses/${search}`);
@@ -37,6 +40,7 @@ const Buses = () => {
                 async function getNearbyBusData() {
                     setSearched(false);
                     setBuses([]);
+                    setAlerts([]);
                     setError('');
                     try {
                         const response = await fetch (`http://localhost:3000/buses/?lat=${position.coords.latitude}&lon=${position.coords.longitude}`);
@@ -45,6 +49,7 @@ const Buses = () => {
                             throw await response.json();
                         }
                         console.log(data);
+                        setAlerts(data.alerts);
                         setBuses(data.stops);
                         setBusTimes(data.filtered);
                         setNearbyBuses(false);
@@ -81,9 +86,18 @@ const Buses = () => {
             </div>
             <p className="self-center">{error}</p>
             <ul>
-                {buses.map(bus => {
+                {Object.entries(alerts).map(([name, obj]) => ({name, ...obj})).map((alert, index) =>{
                     return (
-                        <Bus bus={bus} busTimes={busTimes}/>
+                        <div key={index}>
+                            <BusAlert alert={alert}/>
+                        </div>
+                    )
+                })}
+                {buses.map( (bus, index) => {
+                    return (
+                        <div key={index}>
+                            <Bus bus={bus} busTimes={busTimes}/>
+                        </div>
                     )
                 })}
             </ul>
@@ -102,10 +116,19 @@ const Buses = () => {
                     </div>
                 </div>
                 <ul className="flex flex-col gap-1 p-2">
-                <h3 className="font-bold text-3xl text-center">{buses.route.shortName}</h3>
-                    {buses.stops.map(bus => {
+                    {Object.entries(buses.alerts).map(([name, obj]) => ({name, ...obj})).map((alert, index) =>{
                         return (
-                            <BusStops search={search} bus={bus}/>
+                            <div key={index}>
+                                <BusAlert alert={alert} alerts={buses.alerts}/>
+                            </div>
+                        )
+                    })}
+                    <h3 className="font-bold text-3xl text-center">{buses.route.shortName}</h3>
+                    {buses.stops.map( (bus, index) => {
+                        return (
+                            <div key={index}>
+                                <BusStops search={search} bus={bus}/>
+                            </div>
                         )
                     })}
                 </ul>

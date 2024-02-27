@@ -12,10 +12,16 @@ exports.get_bus = async (req, res, next) => {
         return res.json(filtered);
     } else {
         const data = await getBusTime(req.params.busid.toUpperCase());
+        let alerts = await getBusAlerts();    
+        alerts = alerts.map((el) => { return {...el, informedEntity: el.informedEntity.map(x => x.trip) }}).map(el => {return {...el, informedEntity: el.informedEntity.filter(y => y ? req.params.busid.toUpperCase() == y.routeId : null)}}).filter(el => el.informedEntity.length !== 0).reduce(function(acc, item) {
+            (acc[item.informedEntity[0].routeId] || (acc[item.informedEntity[0].routeId] = [])).push(item.headerText.translation[0].text);
+            return acc;
+            }, {});
+    
         if (data.code === 404) {
             return res.status(404).json("Bus not found.");
         }
-        return res.json({route: data.data.route, stops: data.data.stops});
+        return res.json({route: data.data.route, stops: data.data.stops, alerts});
     }
 }
 
@@ -51,9 +57,10 @@ exports.get_nearby_buses = async (req, res, next) => {
     let data = await getBusRealTime();
     let alerts = await getBusAlerts();
     
-    //test = alerts.map((el) => { return {...el, informedEntity: el.informedEntity.map(x => x.trip) }}).map((el) => { return {...el, informedEntity: el.informedEntity }})
-    //alerts = alerts.filter(el => el.informedEntity.some(x => (Object.values(stops).flat()).includes(x.routeId)));
-
+    alerts = alerts.map((el) => { return {...el, informedEntity: el.informedEntity.map(x => x.trip) }}).map(el => {return {...el, informedEntity: el.informedEntity.filter(y => y ? (Object.values(stops).flat()).includes(y.routeId) : null)}}).filter(el => el.informedEntity.length !== 0).reduce(function(acc, item) {
+        (acc[item.informedEntity[0].routeId] || (acc[item.informedEntity[0].routeId] = [])).push(item.headerText.translation[0].text);
+        return acc;
+        }, {});
 
     let filtered = data.filter(el => Object.values(stops).flat().includes(el.trip.routeId)).map(e => { return {...e, stopTimeUpdate: e.stopTimeUpdate.filter(x => Object.keys(stops).indexOf(x.stopId) > -1)}}).filter(el => Object.keys(el.stopTimeUpdate).length !== 0).flat().sort((a,b) => {
         if (a.stopTimeUpdate[0].arrival && b.stopTimeUpdate[0].arrival) {

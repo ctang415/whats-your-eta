@@ -68,7 +68,12 @@ exports.get_station = async (req, res, next) => {
         let routes = req.params.stationid.split(',');
         let busData = await getBusRealTime();
         let times = [];
-
+        let alerts = await getBusAlerts();    
+        alerts = alerts.map((el) => { return {...el, informedEntity: el.informedEntity.map(x => x.trip) }}).map(el => {return {...el, informedEntity: el.informedEntity.filter(y => y ? routes.includes(y.routeId) : null)}}).filter(el => el.informedEntity.length !== 0).reduce(function(acc, item) {
+            (acc[item.informedEntity[0].routeId] || (acc[item.informedEntity[0].routeId] = [])).push(item.headerText.translation[0].text);
+            return acc;
+            }, {});
+   
         async function getRoutes() {
             return times = busData.filter(el => routes.includes(el.trip.routeId)).map(e => { return {...e, stopTimeUpdate: e.stopTimeUpdate.filter(x => req.query.code == x.stopId)}}).filter(el => el.stopTimeUpdate.length !== 0).sort((a,b) => {
                 if (a.stopTimeUpdate[0].arrival && b.stopTimeUpdate[0].arrival) {
@@ -76,7 +81,7 @@ exports.get_station = async (req, res, next) => {
                 }}).slice(0,3);
         }
         await getRoutes();
-        return res.json({name, times});
+        return res.json({name, times, alerts});
     }
 }
 

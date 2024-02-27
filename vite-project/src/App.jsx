@@ -39,7 +39,6 @@ function App() {
         setList([]);
     }
   }
-    //localStorage.removeItem(`${name}`);
 }
 
 function removeFromBusFavorites(name) {    
@@ -54,7 +53,6 @@ function removeFromBusFavorites(name) {
       setBusList(x);
   }
 }
-  //localStorage.removeItem(`${name}`);
 }
 
   useEffect(() => {

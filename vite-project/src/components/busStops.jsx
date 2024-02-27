@@ -72,8 +72,8 @@ const BusStops = ({bus, search}) => {
             <div>
                 {bus.routes.map((stop, index) => {
                     return (
-                        <div>
-                            <div onClick={() => {searchRoute(bus.code, stop.shortName); setStopId(bus.code); setBusId(stop.shortName); setCode(stop.shortName)}} key={index} className={routes ? "display flex gap-2 cursor-pointer" : "hidden"}>
+                        <div key={index}>
+                            <div onClick={() => {searchRoute(bus.code, stop.shortName); setStopId(bus.code); setBusId(stop.shortName); setCode(stop.shortName)}} className={routes ? "display flex gap-2 cursor-pointer" : "hidden"}>
                                 <p className="font-semibold">{stop.shortName}</p> 
                                 <p>{stop.longName}</p>
                             </div>

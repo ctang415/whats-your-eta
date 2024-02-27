@@ -5,6 +5,8 @@ import Favorited from "../assets/filled_favorite.svg";
 import { useContext } from "react";
 import { Context } from "./context";
 import Alert from "./alert";
+import BusFavoriteTime from "./busFavoriteTime";
+import BusAlert from "./busAlert";
 
 const Home = () => {
     const [current, setCurrent] = useState(((new Date).getTime()) /1000.00);
@@ -91,6 +93,10 @@ const Home = () => {
         setFavorites(favorites.filter(element => element.station !== name))
     }
 
+    function updateBusFavorites(name) {
+        setBusFavorites(busFavorites.filter(element => element.name !== name))
+    }
+
     useEffect(() => {
         if (!ignore && !nearbyStations) {
             mapFavorites();
@@ -104,12 +110,15 @@ const Home = () => {
         if (!nearbyStations) {
         const interval = setInterval(() => {
           setFavorites([]);
+          setBusFavorites([]);
           mapFavorites();
+          setCurrent(((new Date).getTime()) /1000.00)
         }, 60000);
         return () => clearInterval(interval);
     } else {
         const interval = setInterval(() => {
             setFavorites([]);
+            setBusFavorites([]);
             mapNearby();
           }, 60000);
           return () => clearInterval(interval);
@@ -143,69 +152,84 @@ const Home = () => {
             </div>
         )
     } else {
-    return (
-        <div className="flex flex-col self-center w-6/12 p-2 rounded-xl min-h-screen bg-slate-200">
-            <div className="self-center">
-                <button className="p-4 bg-blue-500 text-white rounded-full font-bold hover:scale-105" onClick={() => setNearbyStations(true)}>Check Nearby Stations</button>
-            </div>
-            {favorites.map(favorite => {
-                return (
-                    <div className="p-4"> 
-                        <div className="flex flex-row items-center gap-2">
-                            <header className="text-xl font-bold">{favorite.station}</header>
-                            <div className={nearbyStations ? "hidden" : "display"} onClick={() => {removeFromFavorites(favorite.station); updateFavorites(favorite.station) }}>
-                                <Image size={8} file={Favorited} img="Favorited"/>
-                            </div>
-                        </div>
-                        <ul className="flex flex-col gap-2">
-                            {Object.entries(favorite.alerts).map(([name, obj]) => ({name, ...obj})).map(el =>{
-                                return (
-                                    <Alert alert={el}/>
-                                )
-                            })}
-                        </ul>
-                        <div className="flex flex-row justify-between">
-                            <div className="p-4 w-full flex flex-col gap-2">
-                                <header className="font-bold">Next Northbound</header> 
-                                <ul className={ isLoading ? "none" : "flex flex-col gap-4"}>
-                                    {favorite.north.map( el => {
+        return (
+            <div className="flex flex-col self-center w-6/12 p-2 rounded-xl min-h-screen bg-slate-200">
+                <div className="self-center py-2">
+                    <button className="p-4 bg-blue-500 text-white rounded-full font-bold hover:scale-105" onClick={() => setNearbyStations(true)}>Check Nearby Stations</button>
+                </div>
+                <div>
+                    <h1 className="text-3xl font-bold text-center">TRAINS</h1>
+                    {favorites.map(favorite => {
+                        return (
+                            <div className="p-4"> 
+                                <div className="flex flex-row items-center gap-2">
+                                    <header className="text-xl font-bold">{favorite.station}</header>
+                                    <div className={nearbyStations ? "hidden" : "display"} onClick={() => {removeFromFavorites(favorite.station); updateFavorites(favorite.station) }}>
+                                        <Image size={8} file={Favorited} img="Favorited"/>
+                                    </div>
+                                </div>
+                                <ul className="flex flex-col gap-2">
+                                    {Object.entries(favorite.alerts).map(([name, obj]) => ({name, ...obj})).map(el =>{
                                         return (
-                                            <Time el={el.stopTimeUpdate} train={el.trip.routeId} />
+                                            <Alert alert={el}/>
                                         )
                                     })}
                                 </ul>
-                            </div>
-                            <div className="p-4 w-full flex flex-col gap-2">
-                                <header className="font-bold">Next Southbound</header> 
-                                <ul className={ isLoading ? "none" : "flex flex-col gap-4"}>
-                                    {favorite.south.map (el => {
-                                        return (
-                                            <Time el={el.stopTimeUpdate} train={el.trip.routeId} />
-                                        )
-                                    })}
-                                </ul>
-                            </div>
+                                <div className="flex flex-row justify-between">
+                                    <div className="p-4 w-full flex flex-col gap-2">
+                                        <header className="font-bold">Next Northbound</header> 
+                                        <ul className={ isLoading ? "none" : "flex flex-col gap-4"}>
+                                            {favorite.north.map( el => {
+                                                return (
+                                                    <Time el={el.stopTimeUpdate} train={el.trip.routeId} />
+                                                )
+                                            })}
+                                        </ul>
+                                    </div>
+                                    <div className="p-4 w-full flex flex-col gap-2">
+                                        <header className="font-bold">Next Southbound</header> 
+                                        <ul className={ isLoading ? "none" : "flex flex-col gap-4"}>
+                                            {favorite.south.map (el => {
+                                                return (
+                                                    <Time el={el.stopTimeUpdate} train={el.trip.routeId} />
+                                                )
+                                            })}
+                                        </ul>
+                                    </div>
+                                </div>
                         </div>
-                    </div>
-                )
-            })}
-            <ul>
-                {busFavorites.map(bus => {
-                    return (
-                        <li>
-                            <h3>{bus.name}</h3>
-                            {bus.times.map( (time, index) => {
-                                return (
-                                    <li key={index} className="display flex justify-between">
-                                        <p>{parseInt((time.stopTimeUpdate[0].arrival.time - parseInt(current))/60)} minutes away</p>
-                                        <p>{new Date(time.stopTimeUpdate[0].arrival.time * 1000).toLocaleTimeString()}</p>
-                                    </li>
-                                )
-                            })}
-                        </li>
-                    ) 
+                    )
                 })}
-            </ul>
+            </div>
+            <div>
+                <h1 className="text-3xl font-bold text-center">BUSES</h1>
+                <div className="flex flex-col gap-6 p-4">
+                    {busFavorites.map((bus,index) => {
+                        return (
+                            <ul key={index} className="flex flex-col gap-4">
+                                <div className="flex flex-row items-center gap-4">
+                                    <h3 className="text-xl font-bold">{bus.name}</h3>
+                                    <div className={nearbyStations ? "hidden" : "display"} onClick={() => {removeFromBusFavorites(bus.name); updateBusFavorites(bus.name) }}>
+                                        <Image size={8} file={Favorited} img="Favorited"/>
+                                    </div>
+                                </div>
+                                {Object.entries(bus.alerts).map(([name, obj]) => ({name, ...obj})).map((alert, index) =>{
+                                    return (
+                                        <div key={index}>
+                                            <BusAlert alert={alert} />
+                                        </div>
+                                    )
+                                })}
+                                {bus.times.map( (time, index) => {
+                                    return (
+                                       <BusFavoriteTime current={current} time={time} index={index} bus={bus}/>
+                                    )
+                                })}
+                            </ul>
+                        ) 
+                    })}
+                </div>
+            </div>
         </div>
     )}
 }

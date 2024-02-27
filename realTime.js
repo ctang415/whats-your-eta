@@ -12,28 +12,28 @@ async function getRealTime(str) {
 const fetchData = async (url) => {
     let array = [];
     try {
-    const response = await fetch (url, {
-    method: 'GET', headers: {'Content-type': 'application/json', "x-api-key": `${process.env.API_KEY}`}
-    })
-    if (!response.ok) {
-      const error = new Error(`${response.url}: ${response.status} ${response.statusText}`);
-      error.response = response;
-      throw error;
-    }
-    const buffer = await response.arrayBuffer();
-    const feed = GtfsRealtimeBindings.transit_realtime.FeedMessage.decode(
-    new Uint8Array(buffer)
-  );
-  feed.entity.forEach((entity) => {
-    if (entity.tripUpdate) {
-        array.push(entity.tripUpdate);
+      const response = await fetch (url, {
+      method: 'GET', headers: {'Content-type': 'application/json', "x-api-key": `${process.env.API_KEY}`}
+      })
+      if (!response.ok) {
+        const error = new Error(`${response.url}: ${response.status} ${response.statusText}`);
+        error.response = response;
+        throw error;
+      }
+      const buffer = await response.arrayBuffer();
+      const feed = GtfsRealtimeBindings.transit_realtime.FeedMessage.decode(
+        new Uint8Array(buffer)
+      );
+      feed.entity.forEach((entity) => {
+        if (entity.tripUpdate) {
+          array.push(entity.tripUpdate);
         //console.log(entity.tripUpdate)
+        }
+      });
+      return array;
+    } catch (err) {
+      console.log(err);
     }
-  });
-  return array;
-} catch (err) {
-    console.log(err);
-}
 }
 
 

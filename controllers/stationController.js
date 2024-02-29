@@ -1,14 +1,12 @@
-const trains = require('../trainData');
 const stations = require('../stations');
-const stops = require('../stops');
 const getRealTime = require('../realTime');
 const urlMap = require('../urlMap');
 const fetchAlerts = require('../subwayAlerts');
-const getBusTime = require('../busData');
 const getBusRealTime = require('../busRealTime');
 const getBusAlerts = require('../busAlerts');
 
 exports.get_station = async (req, res, next) => {
+    //  query for favorite train stations
     if (req.query.station !== undefined) {
         let current = (((new Date).getTime()) /1000.00);
         const stationData = await stations();
@@ -64,6 +62,7 @@ exports.get_station = async (req, res, next) => {
             }}).slice(0,6);
         return res.json({station, alerts, north, south});
     } else {
+        // query for favorite bus stops
         let name = req.query.name;
         let routes = req.params.stationid.split(',');
         let busData = await getBusRealTime();

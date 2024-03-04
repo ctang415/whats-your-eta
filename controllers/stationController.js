@@ -14,10 +14,10 @@ exports.get_station = async (req, res, next) => {
         let validStops = [];
         let station = req.query.name;
         let sorted = [];
-        
+        let geo = req.query.georeference;
         //get all trains by station
         function getAllTrains() {
-            let x = (Object.values(stationData).filter(el => el.name === req.query.name));
+            let x = (Object.values(stationData).filter(el => el.geo === req.query.georeference && el.name === req.query.name ));
             for (let i = 0; i < x.length; i++) {
                 routes.push(x[i].routes.replace(/\s/g, ''));
                 validStops.push(x[i].gtfs);
@@ -60,7 +60,7 @@ exports.get_station = async (req, res, next) => {
             if (a.stopTimeUpdate.arrival && b.stopTimeUpdate.arrival) {
                 return a.stopTimeUpdate.arrival.time - b.stopTimeUpdate.arrival.time
             }}).slice(0,6);
-        return res.json({station, alerts, north, south});
+        return res.json({station, alerts, north, south, geo});
     } else {
         // query for favorite bus stops
         let name = req.query.name;

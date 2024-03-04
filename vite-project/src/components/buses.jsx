@@ -25,7 +25,6 @@ const Buses = () => {
                 throw await response.json();
             }
             const data = await response.json();
-            console.log(data);
             setBuses(data);
             setSearched(true);
         } catch (err) {
@@ -48,7 +47,6 @@ const Buses = () => {
                         if (!response.ok) {
                             throw await response.json();
                         }
-                        console.log(data);
                         setAlerts(data.alerts);
                         setBuses(data.stops);
                         setBusTimes(data.filtered);

@@ -16,24 +16,19 @@ const Stop = ({element, train, color}) => {
     const {removeFromFavorites, list, setList} = useContext(Context);
     const params = useParams();
     
-    function addToFavorites(name, trains, stop, stationId) {
+    function addToFavorites(name, trains, stop, stationId, geo) {
         if (localStorage.getItem("trains") == undefined) {
-            //localStorage.setItem("trains", JSON.stringify([[buses, stop, code]]));
-            localStorage.setItem("trains", JSON.stringify([{name: name, route: trains, id: stop, station_id: stationId}]));
+            localStorage.setItem("trains", JSON.stringify([{name: name, route: trains, id: stop, station_id: stationId, geo: geo }]));
             let x = JSON.parse(localStorage.getItem("trains"));
             setList(x);
         } else {
             let x = JSON.parse(localStorage.getItem("trains"));
-            if (x.find(el => el.name == name) == undefined) {
-                //localStorage.removeItem("trains");
-                x.push({name:name,route: trains, id: stop, station_id: stationId})
+            if (x.find(el => el.name == name && el.geo == geo) == undefined) {
+                x.push({name:name, route: trains, id: stop, station_id: stationId, geo: geo})
                 localStorage.setItem("trains", JSON.stringify(x));
             }
             setList(x);
         }
-        console.log(list)
-        //localStorage.setItem(`${name}`, JSON.stringify({route: trains, id: stop, station_id: stationId}));
-        //setList(Object.keys(localStorage));
     }
 
     async function getTimes() {
@@ -61,10 +56,10 @@ const Stop = ({element, train, color}) => {
         <li key={element.name} className="p-4">
             <div className="flex flex-row items-center gap-2">
                 <header className="text-xl font-bold">{element.name}</header>
-                <div className={ list && list.some( y => y.name == element.name) ? "hidden" : "display"} onClick={() => addToFavorites(element.name, element.routes, element.gtfs, element.station_id)}>
+                <div className={ list && list.some( y => y.name == element.name && y.geo == element.geo) ? "hidden" : "display"} onClick={() => addToFavorites(element.name, element.routes, element.gtfs, element.station_id, element.geo)}>
                     <Image size={8} file={Favorite} img="Favorite"/>
                 </div>
-                <div className={ list && list.some( y=> y.name == element.name) ? "display" : "hidden" } onClick={() => removeFromFavorites(element.name)}>
+                <div className={ list && list.some( y=> y.name == element.name && y.geo == element.geo) ? "display" : "hidden" } onClick={() => removeFromFavorites(element.name, element.geo)}>
                     <Image size={8} file={Favorited} img="Favorited"/>
                 </div>
             </div>

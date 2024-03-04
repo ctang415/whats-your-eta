@@ -27,11 +27,11 @@ function App() {
     }
   }
 
-  function removeFromFavorites(name) {    
+  function removeFromFavorites(name, geo) {    
     if (localStorage.getItem("trains") !== undefined) {        
       let x = JSON.parse(localStorage.getItem("trains"));
       if (x.length > 1) {
-        let filtered = x.filter(el => el.name !== name);
+        let filtered = x.filter(el => el.name !== name && el.geo !== geo);
         localStorage.setItem("trains", JSON.stringify(filtered));
         setList(x);
       } else {
@@ -61,13 +61,11 @@ function removeFromBusFavorites(name) {
       let y = JSON.parse(localStorage.getItem("buses"));
       setList(x);
       setBusList(y);
-
-      console.log(list);
-      console.log(busList)
     }
     return () => {
       ignore = true;
     }
+
   }, [])
 
   return (

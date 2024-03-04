@@ -27,7 +27,6 @@ const fetchData = async (url) => {
       feed.entity.forEach((entity) => {
         if (entity.tripUpdate) {
           array.push(entity.tripUpdate);
-        //console.log(entity.tripUpdate)
         }
       });
       return array;

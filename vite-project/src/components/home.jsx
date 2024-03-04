@@ -18,9 +18,9 @@ const Home = () => {
     const [stations, setStations] = useState([]);
     let ignore = false;
 
-  async function getStations(trains, station, name) {
+  async function getStations(trains, station, name, geo) {
         try {
-            const response = await fetch (`http://localhost:3000/favorites/${trains}?station=${station}&name=${name}`);
+            const response = await fetch (`http://localhost:3000/favorites/${trains}?station=${station}&name=${name}&georeference=${geo}`);
             const data = await response.json();
             setFavorites(favorites =>[...favorites, data]);
         } catch (err) {
@@ -33,7 +33,6 @@ const Home = () => {
             const response = await fetch (`http://localhost:3000/favorites/${buses}?name=${name}&code=${code}`);
             const data = await response.json();
             setBusFavorites(favorites => [...favorites, data]);
-            console.log(data)
         } catch (err) {
             console.log(err);
         }
@@ -46,7 +45,8 @@ const Home = () => {
                 getStations(
                 (x[i]).route.replace(/\s/g, ''),
                 (x[i]).id,
-                (x[i].name)
+                (x[i].name),
+                (x[i].geo)
             );
         }
     }
@@ -71,7 +71,8 @@ const Home = () => {
                 getStations(
                     data[i].routes.replace(/\s/g, ''),
                     data[i].gtfs,
-                    data[i].name
+                    data[i].name,
+                    data[i].geo
                 );
             }
         } catch (err) {
@@ -84,17 +85,18 @@ const Home = () => {
             getStations(
                 stations[i].routes.replace(/\s/g, ''),
                 stations[i].gtfs,
-                stations[i].name
+                stations[i].name,
+                stations[i].geo
             );
         }
     }
     
-    function updateFavorites(name) {
-        setFavorites(favorites.filter(element => element.station !== name))
+    function updateFavorites(name, geo) {
+        setFavorites(favorites.filter(element => element.geo !== geo && element.name !== name));
     }
 
     function updateBusFavorites(name) {
-        setBusFavorites(busFavorites.filter(element => element.name !== name))
+        setBusFavorites(busFavorites.filter(element => element.name !== name));
     }
 
     useEffect(() => {
@@ -164,7 +166,7 @@ const Home = () => {
                             <div className="p-4"> 
                                 <div className="flex flex-row items-center gap-2">
                                     <header className="text-xl font-bold">{favorite.station}</header>
-                                    <div className={nearbyStations ? "hidden" : "display"} onClick={() => {removeFromFavorites(favorite.station); updateFavorites(favorite.station) }}>
+                                    <div className={nearbyStations ? "hidden" : "display"} onClick={() => {removeFromFavorites(favorite.station, favorite.geo); updateFavorites(favorite.station, favorite.geo) }}>
                                         <Image size={8} file={Favorited} img="Favorited"/>
                                     </div>
                                 </div>

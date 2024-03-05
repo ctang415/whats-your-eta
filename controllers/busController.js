@@ -3,6 +3,7 @@ const getBusRealTime = require('../busRealTime');
 const getBusAlerts = require('../busAlerts');
 
 exports.get_bus = async (req, res, next) => {
+    // returns specific bus stop times
     if (req.query.stop !== undefined) {
         let busData = await getBusRealTime();
         let filtered = busData.filter(el => el.trip.routeId == req.query.bus.toUpperCase()).map(e => { return {...e, stopTimeUpdate: e.stopTimeUpdate.filter(x => req.query.stop == x.stopId) }}).filter(el => Object.keys(el.stopTimeUpdate).length !== 0).flat().sort((a,b) => {
@@ -11,17 +12,18 @@ exports.get_bus = async (req, res, next) => {
             }}).slice(0,3);
         return res.json(filtered);
     } else {
+        // returns bus stops
         const data = await getBusTime(req.params.busid.toUpperCase());
-        let alerts = await getBusAlerts();    
+        if (data.code === 404) {
+            return res.status(404).json("Bus not found.");
+        }
+        let alerts = await getBusAlerts();
+        let split = data.data.entry.stopGroupings[0].stopGroups.map(el => { return {...el, stopIds: el.stopIds.map(x => data.data.references.stops.find(y => y.id == x)) } }).map(el => { return {...el, stopIds: el.stopIds.map(e => { return {...e, routeIds: e.routeIds.map(x => data.data.references.routes.find(y => y.id == x))}})}})
         alerts = alerts.map((el) => { return {...el, informedEntity: el.informedEntity.map(x => x.trip) }}).map(el => {return {...el, informedEntity: el.informedEntity.filter(y => y ? req.params.busid.toUpperCase() == y.routeId : null)}}).filter(el => el.informedEntity.length !== 0).reduce(function(acc, item) {
             (acc[item.informedEntity[0].routeId] || (acc[item.informedEntity[0].routeId] = [])).push(item.descriptionText.translation[0].text);
             return acc;
             }, {});
-    
-        if (data.code === 404) {
-            return res.status(404).json("Bus not found.");
-        }
-        return res.json({route: data.data.route, stops: data.data.stops, alerts});
+        return res.json({route: req.params.busid.toUpperCase(), stops: split, alerts});
     }
 }
 

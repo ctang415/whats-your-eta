@@ -51,8 +51,8 @@ function removeFromBusFavorites(name) {
       let filtered = x.filter(el => el.stop !== name);
       localStorage.setItem("buses", JSON.stringify(filtered));
       setBusList(x);
+    }
   }
-}
 }
 
   useEffect(() => {
@@ -65,7 +65,6 @@ function removeFromBusFavorites(name) {
     return () => {
       ignore = true;
     }
-
   }, [])
 
   return (

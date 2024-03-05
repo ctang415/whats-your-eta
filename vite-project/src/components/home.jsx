@@ -16,6 +16,7 @@ const Home = () => {
     const {removeFromFavorites, removeFromBusFavorites} = useContext(Context);
     const [nearbyStations, setNearbyStations] = useState(false);
     const [stations, setStations] = useState([]);
+    const [buses, setBuses] = useState([])
     let ignore = false;
 
   async function getStations(trains, station, name, geo) {
@@ -66,6 +67,9 @@ const Home = () => {
         try {
             const response = await fetch (`http://localhost:3000/?lat=${position.coords.latitude}&lon=${position.coords.longitude}`)
             const data = await response.json();
+            if(!response.ok) {
+                throw await response.json();
+            }
             setStations(data);
             for (let i = 0; i < data.length; i++) {
                 getStations(
@@ -80,6 +84,26 @@ const Home = () => {
         }
     }
 
+    async function getNearbyBusData(position) {
+        try {
+            const response = await fetch (`http://localhost:3000/buses/?lat=${position.coords.latitude}&lon=${position.coords.longitude}`);
+            const data = await response.json();
+            if (!response.ok) {
+                throw await response.json();
+            }
+            setBuses(data.stops);
+            for (let i = 0; i < data.stops.length; i++) {
+                getBuses(
+                    data.stops[i].routes.map(x => x.shortName),
+                    data.stops[i].name,
+                    data.stops[i].code
+                )
+            }
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
     function mapNearby() {
         for (let i = 0; i < stations.length; i++) {
             getStations(
@@ -88,6 +112,16 @@ const Home = () => {
                 stations[i].name,
                 stations[i].geo
             );
+        }
+    }
+
+    function mapNearbyBus() {
+        for (let i = 0; i < buses.length; i++) {
+            getBuses(
+                buses[i].routes.map(x => x.shortName),
+                buses[i].name,
+                buses[i].code
+            )
         }
     }
     
@@ -114,7 +148,7 @@ const Home = () => {
           setFavorites([]);
           setBusFavorites([]);
           mapFavorites();
-          setCurrent(((new Date).getTime()) /1000.00)
+          setCurrent(((new Date).getTime()) /1000.00);
         }, 60000);
         return () => clearInterval(interval);
     } else {
@@ -122,16 +156,19 @@ const Home = () => {
             setFavorites([]);
             setBusFavorites([]);
             mapNearby();
+            mapNearbyBus();
           }, 60000);
           return () => clearInterval(interval);
     }
-      }, []);
+      }, [getNearbyStations]);
 
     useEffect(() => {
         if (nearbyStations) {
             function successFunction(position) {
                 setFavorites([]);
+                setBusFavorites([]);
                 getNearbyStations(position);
+                getNearbyBusData(position);
             }
           
             function errorFunction() {
@@ -159,11 +196,12 @@ const Home = () => {
                 <div className="self-center py-2">
                     <button className="p-4 bg-blue-500 text-white rounded-full font-bold hover:scale-105" onClick={() => setNearbyStations(true)}>Check Nearby Stations</button>
                 </div>
-                <div>
+                <div className="flex flex-col gap-2">
                     <h1 className="text-3xl font-bold text-center">TRAINS</h1>
-                    {favorites.map(favorite => {
+                    <div className="flex flex-col gap-2">
+                    {favorites.map( (favorite, index) => {
                         return (
-                            <div className="p-4"> 
+                            <div key={index} className="p-4 border-black border-t-2"> 
                                 <div className="flex flex-row items-center gap-2">
                                     <header className="text-xl font-bold">{favorite.station}</header>
                                     <div className={nearbyStations ? "hidden" : "display"} onClick={() => {removeFromFavorites(favorite.station, favorite.geo); updateFavorites(favorite.station, favorite.geo) }}>
@@ -171,9 +209,11 @@ const Home = () => {
                                     </div>
                                 </div>
                                 <ul className="flex flex-col gap-2">
-                                    {Object.entries(favorite.alerts).map(([name, obj]) => ({name, ...obj})).map(el =>{
+                                    {Object.entries(favorite.alerts).map(([name, obj]) => ({name, ...obj})).map( (el, index) =>{
                                         return (
-                                            <Alert alert={el}/>
+                                            <div key={index}>
+                                                <Alert alert={el}/>
+                                            </div>
                                         )
                                     })}
                                 </ul>
@@ -181,9 +221,11 @@ const Home = () => {
                                     <div className="p-4 w-full flex flex-col gap-2">
                                         <header className="font-bold">Next Northbound</header> 
                                         <ul className={ isLoading ? "none" : "flex flex-col gap-4"}>
-                                            {favorite.north.map( el => {
+                                            {favorite.north.map( (el, index) => {
                                                 return (
-                                                    <Time el={el.stopTimeUpdate} train={el.trip.routeId} />
+                                                    <div key={index}>
+                                                        <Time el={el.stopTimeUpdate} train={el.trip.routeId} />
+                                                    </div>
                                                 )
                                             })}
                                         </ul>
@@ -191,9 +233,11 @@ const Home = () => {
                                     <div className="p-4 w-full flex flex-col gap-2">
                                         <header className="font-bold">Next Southbound</header> 
                                         <ul className={ isLoading ? "none" : "flex flex-col gap-4"}>
-                                            {favorite.south.map (el => {
+                                            {favorite.south.map ( (el, index) => {
                                                 return (
-                                                    <Time el={el.stopTimeUpdate} train={el.trip.routeId} />
+                                                    <div key={index}>
+                                                        <Time el={el.stopTimeUpdate} train={el.trip.routeId} />
+                                                    </div>
                                                 )
                                             })}
                                         </ul>
@@ -202,13 +246,14 @@ const Home = () => {
                         </div>
                     )
                 })}
+                </div>
             </div>
-            <div>
+            <div className="flex flex-col gap-2">
                 <h1 className="text-3xl font-bold text-center">BUSES</h1>
                 <div className="flex flex-col gap-6 p-4">
-                    {busFavorites.map((bus,index) => {
+                    {busFavorites.map((bus, index) => {
                         return (
-                            <ul key={index} className="flex flex-col gap-4">
+                            <ul key={index} className="flex flex-col gap-4 border-t-2 border-black py-4">
                                 <div className="flex flex-row items-center gap-4">
                                     <h3 className="text-xl font-bold">{bus.name}</h3>
                                     <div className={nearbyStations ? "hidden" : "display"} onClick={() => {removeFromBusFavorites(bus.name); updateBusFavorites(bus.name) }}>
@@ -224,7 +269,9 @@ const Home = () => {
                                 })}
                                 {bus.times.map( (time, index) => {
                                     return (
-                                       <BusFavoriteTime current={current} time={time} index={index} bus={bus}/>
+                                        <div key={index}>
+                                            <BusFavoriteTime current={current} time={time} index={index} bus={bus}/>
+                                        </div>
                                     )
                                 })}
                             </ul>

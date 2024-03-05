@@ -18,9 +18,10 @@ async function getBusAlerts() {
               array.push(entity.alert);
           }
         });
-        return array
+        return array;
     } catch (err) {
         console.log(err);
+        return err;
     }
 }
 

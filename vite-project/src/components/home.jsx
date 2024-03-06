@@ -185,25 +185,25 @@ const Home = () => {
 
     if (favorites.length === 0 && busFavorites.length === 0) {
         return (
-            <div className="flex flex-col self-center w-6/12 p-2 rounded-xl min-h-screen items-center text-center">
+            <div className="flex flex-col self-center w-6/12 p-2 rounded-xl min-h-screen items-center text-center sm:w-full sm:rounded-none">
                 No favorites saved
                 <button className="p-4 bg-blue-500 text-white rounded-full font-bold" onClick={() => setNearbyStations(true)}>Check Nearby Stations</button>
             </div>
         )
     } else {
         return (
-            <div className="flex flex-col self-center w-6/12 p-2 rounded-xl min-h-screen bg-slate-200">
+            <div className="flex flex-col self-center w-6/12 p-2 rounded-xl min-h-screen bg-slate-200 sm:w-full sm:rounded-none lg:w-fit">
                 <div className="self-center py-2">
-                    <button className="p-4 bg-blue-500 text-white rounded-full font-bold hover:scale-105" onClick={() => setNearbyStations(true)}>Check Nearby Stations</button>
+                    <button className="p-4 bg-blue-500 text-white rounded-full font-bold hover:scale-105 sm:p-2" onClick={() => setNearbyStations(true)}>Check Nearby Stations</button>
                 </div>
                 <div className="flex flex-col gap-2">
-                    <h1 className="text-3xl font-bold text-center">TRAINS</h1>
+                    <h1 className="text-3xl font-bold text-center sm:text-xl">TRAINS</h1>
                     <div className="flex flex-col gap-2">
                     {favorites.map( (favorite, index) => {
                         return (
-                            <div key={index} className="p-4 border-black border-t-2"> 
+                            <div key={index} className="p-4 border-black border-t-2 sm:p-0"> 
                                 <div className="flex flex-row items-center gap-2">
-                                    <header className="text-xl font-bold">{favorite.station}</header>
+                                    <header className="text-xl font-bold sm:text-lg">{favorite.station}</header>
                                     <div className={nearbyStations ? "hidden" : "display"} onClick={() => {removeFromFavorites(favorite.station, favorite.geo); updateFavorites(favorite.station, favorite.geo) }}>
                                         <Image size={8} file={Favorited} img="Favorited"/>
                                     </div>
@@ -217,8 +217,8 @@ const Home = () => {
                                         )
                                     })}
                                 </ul>
-                                <div className="flex flex-row justify-between">
-                                    <div className="p-4 w-full flex flex-col gap-2">
+                                <div className="flex flex-row justify-between sm:text-sm">
+                                    <div className="p-4 w-full flex flex-col gap-2 sm:p-2 md:p-2">
                                         <header className="font-bold">Next Northbound</header> 
                                         <ul className={ isLoading ? "none" : "flex flex-col gap-4"}>
                                             {favorite.north.map( (el, index) => {
@@ -230,7 +230,7 @@ const Home = () => {
                                             })}
                                         </ul>
                                     </div>
-                                    <div className="p-4 w-full flex flex-col gap-2">
+                                    <div className="p-4 w-full flex flex-col gap-2 sm:p-2 md:p-2">
                                         <header className="font-bold">Next Southbound</header> 
                                         <ul className={ isLoading ? "none" : "flex flex-col gap-4"}>
                                             {favorite.south.map ( (el, index) => {
@@ -249,13 +249,13 @@ const Home = () => {
                 </div>
             </div>
             <div className="flex flex-col gap-2">
-                <h1 className="text-3xl font-bold text-center">BUSES</h1>
+                <h1 className="text-3xl font-bold text-center sm:text-xl">BUSES</h1>
                 <div className="flex flex-col gap-6 p-4">
                     {busFavorites.map((bus, index) => {
                         return (
                             <ul key={index} className="flex flex-col gap-4 border-t-2 border-black py-4">
                                 <div className="flex flex-row items-center gap-4">
-                                    <h3 className="text-xl font-bold">{bus.name}</h3>
+                                    <h3 className="text-xl font-bold sm:text-sm">{bus.name}</h3>
                                     <div className={nearbyStations ? "hidden" : "display"} onClick={() => {removeFromBusFavorites(bus.name); updateBusFavorites(bus.name) }}>
                                         <Image size={8} file={Favorited} img="Favorited"/>
                                     </div>

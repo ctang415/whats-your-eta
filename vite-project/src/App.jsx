@@ -68,7 +68,7 @@ function removeFromBusFavorites(name) {
   }, [])
 
   return (
-    <div className='min-h-screen flex flex-col bg-gray-100'>
+    <div className='min-h-screen w-full flex flex-col bg-gray-100'>
       <Header />
       <Context.Provider value={{trains, setTrains, fetchTrains, removeFromFavorites, setList, list, setBusList, busList, removeFromBusFavorites}}>
       <Outlet />

@@ -31,7 +31,7 @@ const Alert = ({alert}) => {
     }, [])
 
     return (
-        <li className="flex flex-col gap-2">
+        <li className="flex flex-col gap-2 sm:text-sm">
             <div className="flex flex-row bg-slate-300 p-2 rounded-md gap-1 items-center font-bold cursor-pointer" onClick={() => setDisplay(!display)}>
                 <h3 className="px-3 py-1 rounded-full"
                 style={`${color}` !== '' ? ["N", "W", "Q", "R", "6X"].indexOf(`${alert.name}`) < 0 ? {backgroundColor: `#${color}`, color: 'white', fontWeight: 'bold' } : {backgroundColor: `#${color}`, color: 'black', fontWeight: 'bold' } : { color: 'black', fontWeight: "bold", backgroundColor: "white", border: "#D3D3D3 solid"}}>{alert.name}</h3>

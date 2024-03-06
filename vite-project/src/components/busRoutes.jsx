@@ -58,7 +58,7 @@ const BusRoutes = ({bus, search}) => {
     }, [stopId]);
 
     return (
-        <li className="flex flex-col gap-1 p-2 rounded-md bg-slate-300" key={bus.code}>
+        <li className="flex flex-col gap-1 p-2 rounded-md bg-slate-300 sm:text-sm" key={bus.code}>
             <div className="flex flex-row gap-2">
                 <p onClick={() => {setRoutes(!routes); setTime(false); setStopId(''); setBusId(''); setCode('')}} className="font-bold cursor-pointer">{bus.name}</p>
                 <div className={busList && busList.some( y => y.stop == bus.name) ? "hidden" : "display"} onClick={() => addToFavorites(bus.routeIds, bus.name, bus.code)}>

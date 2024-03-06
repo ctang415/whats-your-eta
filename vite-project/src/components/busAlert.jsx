@@ -1,10 +1,10 @@
 import { useState } from "react";
 
 const BusAlert = ({alert}) => {
-
     const [display, setDisplay] = useState(false);
+
     return (
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-2 sm:text-sm">
             <div className="flex flex-row items-center gap-1 bg-slate-300 p-2 rounded-md font-bold cursor-pointer" onClick={() => setDisplay(!display)}>
             <h3 className="text-center font-bold bg-blue-700 text-white px-3 py-1 rounded-full">{alert.name}</h3>
             <div>{Object.values(alert).length-1}</div>

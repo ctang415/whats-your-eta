@@ -55,11 +55,11 @@ exports.get_station = async (req, res, next) => {
         const north = sorted.filter(el => el.stopTimeUpdate.stopId.slice(-1) == "N").filter(el => !el.stopTimeUpdate.arrival ? parseInt((el.stopTimeUpdate.departure.time - parseInt(current))/60) >= 0 : parseInt((el.stopTimeUpdate.arrival.time - parseInt(current))/60) >= 0).sort((a,b) => {
             if (a.stopTimeUpdate.arrival && b.stopTimeUpdate.arrival) {
                 return a.stopTimeUpdate.arrival.time - b.stopTimeUpdate.arrival.time
-            }}).slice(0,6);
+            }}).slice(0,4);
         const south = sorted.filter(el => el.stopTimeUpdate.stopId.slice(-1) == "S").filter(el => !el.stopTimeUpdate.arrival ? parseInt((el.stopTimeUpdate.departure.time - parseInt(current))/60) >= 0 : parseInt((el.stopTimeUpdate.arrival.time - parseInt(current))/60) >= 0).sort((a,b) => {
             if (a.stopTimeUpdate.arrival && b.stopTimeUpdate.arrival) {
                 return a.stopTimeUpdate.arrival.time - b.stopTimeUpdate.arrival.time
-            }}).slice(0,6);
+            }}).slice(0,4);
         return res.json({station, alerts, north, south, geo});
     } else {
         // query for favorite bus stops

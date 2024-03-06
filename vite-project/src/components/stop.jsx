@@ -53,9 +53,9 @@ const Stop = ({element, train, color}) => {
     }, []);
 
     return (
-        <li key={element.name} className="p-4">
-            <div className="flex flex-row items-center gap-2">
-                <header className="text-xl font-bold">{element.name}</header>
+        <li key={element.name} className="p-4 sm:p-0">
+            <div className="flex flex-row items-center gap-2 border-b-2 border-black">
+                <header className="text-xl font-bold sm:text-base">{element.name}</header>
                 <div className={ list && list.some( y => y.name == element.name && y.geo == element.geo) ? "hidden" : "display"} onClick={() => addToFavorites(element.name, element.routes, element.gtfs, element.station_id, element.geo)}>
                     <Image size={8} file={Favorite} img="Favorite"/>
                 </div>
@@ -64,8 +64,8 @@ const Stop = ({element, train, color}) => {
                 </div>
             </div>
             <div className="flex flex-row justify-between">
-                <div className="p-4 w-full flex flex-col gap-2">
-                    <header className="font-bold">Next Northbound</header> 
+                <div className="p-4 w-full flex flex-col gap-2 sm:p-2">
+                    <header className="font-bold sm:text-sm">Next Northbound</header> 
                     <ul className={ isLoading ? "none" : "flex flex-col gap-4"}>
                         {northTimes.length !== 0 ? northTimes.map(el => {
                             return (
@@ -74,8 +74,8 @@ const Stop = ({element, train, color}) => {
                         }) : <p>No Trains Available</p>}
                     </ul>
                 </div>
-                <div className="p-4 w-full flex flex-col gap-2">
-                    <header className="font-bold">Next Southbound</header>
+                <div className="p-4 w-full flex flex-col gap-2 sm:p-2">
+                    <header className="font-bold sm:text-sm">Next Southbound</header>
                     <ul className={ isLoading ? "none" : "flex flex-col gap-4"}>
                         {southTimes.length !== 0 ? southTimes.map(el => {
                             return (

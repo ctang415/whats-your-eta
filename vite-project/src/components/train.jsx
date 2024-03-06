@@ -63,10 +63,10 @@ const Train = () => {
     }, [])
 
     return (
-        <div className="flex flex-col items-center p-4 gap-2">
+        <div className="flex flex-col items-center p-4 gap-2 sm:p-0 sm:gap-0">
             <header style={`${color}` !== '' ? ["N", "W", "Q", "R"].indexOf(`${params.trainid}`) < 0 ? {backgroundColor: `#${color}`, color: 'white', fontWeight: 'bold' } : {backgroundColor: `#${color}`, color: 'black', fontWeight: 'bold' } : 
             { color: 'black', fontWeight: "bold", backgroundColor: "white", border: "#D3D3D3 solid"}} className="rounded-full px-4 py-2 text-4xl font-bold">{params.trainid}</header>
-            <ul className="w-6/12 p-2 rounded-xl min-h-screen bg-slate-200">
+            <ul className="w-6/12 p-2 rounded-xl min-h-screen bg-slate-200 sm:w-full sm:rounded-none lg:w-fit">
                 {stations.map(element => {
                     return (
                         <Stop train={params.trainid} color={color} key={element.name} element={element}/>

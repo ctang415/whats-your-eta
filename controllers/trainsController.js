@@ -11,10 +11,12 @@ exports.get_train_stations = async (req, res, next) => {
     let trains = Object.values(data);
     // grabs routes that match specific train
     if (req.params.trainid.toUpperCase() === "R") {
-        let filteredData = trains.filter(element => element.routes.indexOf(req.params.trainid.toUpperCase()) > -1 && element.routes !== "SIR").sort((a,b) => {return a.lat - b.lat});
-        return res.json({routes: filteredData});
+        let length = trains.filter(element => element.routes.indexOf(req.params.trainid.toUpperCase()) > -1 && element.routes !== "SIR")
+        let filteredData = trains.filter(element => element.routes.indexOf(req.params.trainid.toUpperCase()) > -1 && element.routes !== "SIR").sort((a,b) => {return a.lat - b.lat}).slice( (parseInt(req.query.page) * 5), ( parseInt(req.query.page) + 1) * req.query.limit);
+        return res.json({routes: filteredData, length});
     } else {
-        let filteredData = trains.filter(element => element.routes.indexOf(req.params.trainid.toUpperCase()) > -1).sort((a,b) => {return a.lat - b.lat});
-        return res.json({routes: filteredData});
+        let length = trains.filter(element => element.routes.indexOf(req.params.trainid.toUpperCase()) > -1).length;
+        let filteredData = trains.filter(element => element.routes.indexOf(req.params.trainid.toUpperCase()) > -1).sort((a,b) => {return a.lat - b.lat}).slice( ( parseInt(req.query.page) * 5), ( ( parseInt(req.query.page) + 1) * req.query.limit ));
+        return res.json({routes: filteredData, length});
     }
 }

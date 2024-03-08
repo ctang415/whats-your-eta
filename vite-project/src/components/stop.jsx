@@ -10,6 +10,7 @@ import { Context } from './context';
 
 const Stop = ({element, train, color}) => {
     let ignore = false;
+    const [current, setCurrent] = useState(((new Date).getTime()) /1000.00);
     const [northTimes, setNorthTimes] = useState([]);
     const [southTimes, setSouthTimes] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
@@ -52,6 +53,14 @@ const Stop = ({element, train, color}) => {
         }
     }, []);
 
+    useEffect(() => {
+        const interval = setInterval(() => {
+            getTimes();
+            setCurrent(((new Date).getTime()) /1000.00);
+        }, 60000);
+        return () => clearInterval(interval);
+    }, []);
+
     return (
         <li key={element.name} className="p-4 sm:p-0">
             <div className="flex flex-row items-center gap-2 border-b-2 border-black">
@@ -67,9 +76,11 @@ const Stop = ({element, train, color}) => {
                 <div className="p-4 w-full flex flex-col gap-2 sm:p-2">
                     <header className="font-bold sm:text-sm">Next Northbound</header> 
                     <ul className={ isLoading ? "none" : "flex flex-col gap-4"}>
-                        {northTimes.length !== 0 ? northTimes.map(el => {
+                        {northTimes.length !== 0 ? northTimes.map( (el, index) => {
                             return (
-                                <Time el={el} color={color} train={train}/>
+                                <div key={index}>
+                                    <Time el={el} color={color} train={train} current={current}/>
+                                </div>
                             )
                         }) : <p>No Trains Available</p>}
                     </ul>
@@ -77,9 +88,11 @@ const Stop = ({element, train, color}) => {
                 <div className="p-4 w-full flex flex-col gap-2 sm:p-2">
                     <header className="font-bold sm:text-sm">Next Southbound</header>
                     <ul className={ isLoading ? "none" : "flex flex-col gap-4"}>
-                        {southTimes.length !== 0 ? southTimes.map(el => {
+                        {southTimes.length !== 0 ? southTimes.map( (el, index) => {
                             return (
-                                <Time el={el} color={color} train={train}/>
+                                <div key={index}>
+                                    <Time el={el} color={color} train={train} current={current}/>
+                                </div>
                             )
                         }) : <p>No Trains Available</p> }
                     </ul>

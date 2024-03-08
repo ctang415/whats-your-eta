@@ -3,9 +3,8 @@ import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { Context } from "./context";
 
-const Time = ({el, color, train}) => {
+const Time = ({el, color, train, current}) => {
     const params = useParams();
-    const [current, setCurrent] = useState(((new Date).getTime()) /1000.00);
     const [ homeColor, setHomeColor] = useState('')
     let ignore = false;
 

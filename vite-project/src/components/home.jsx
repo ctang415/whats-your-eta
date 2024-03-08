@@ -224,7 +224,7 @@ const Home = () => {
                                             {favorite.north.map( (el, index) => {
                                                 return (
                                                     <div key={index}>
-                                                        <Time el={el.stopTimeUpdate} train={el.trip.routeId} />
+                                                        <Time el={el.stopTimeUpdate} train={el.trip.routeId} current={current} />
                                                     </div>
                                                 )
                                             })}
@@ -236,7 +236,7 @@ const Home = () => {
                                             {favorite.south.map ( (el, index) => {
                                                 return (
                                                     <div key={index}>
-                                                        <Time el={el.stopTimeUpdate} train={el.trip.routeId} />
+                                                        <Time el={el.stopTimeUpdate} train={el.trip.routeId} current={current} />
                                                     </div>
                                                 )
                                             })}

@@ -11,11 +11,11 @@ How to run locally on your computer:
 Use `node app.js` in the default folder to run the server for the API and use `npm run dev` in the src folder to run the web application.
 
 ### What the application looks like:
-![Screenshot of all trains](https://imgur.com/ApvICiJ)
+![Screenshot of all trains](https://imgur.com/ApvICiJ.jpg)
 View for trains page
-![Screenshot of a specific train](https://imgur.com/A8OVjlb)
+![Screenshot of a specific train](https://imgur.com/A8OVjlb.jpg)
 View for specific train
-![Screenshot of a specific bus stop](https://imgur.com/kvobici)
+![Screenshot of a specific bus stop](https://imgur.com/kvobici.jpg)
 View for specific bus
-![Screenshot of favorites, including train alerts](https://imgur.com/A9751bu)
+![Screenshot of favorites, including train alerts](https://imgur.com/A9751bu.jpg)
 View for favorites page with vehicle alerts

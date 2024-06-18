@@ -17,6 +17,7 @@ const Trains = () => {
     }, [])
 
     return (
+        <div className="flex flex-col self-center w-6/12 p-2 rounded-xl min-h-screen bg-slate-200 sm:w-full sm:rounded-none lg:w-3/4">
         <div className="flex flex-col items-center gap-4 p-4">
             <h3 className="text-4xl font-bold">Trains</h3>
             <div className="flex flex-col gap-3">
@@ -37,6 +38,7 @@ const Trains = () => {
                     )
                 })}
             </div>
+        </div>
         </div>
     )
 }

@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 const Header = () => {
     
     return (
-        <header className="w-screen flex flex-row justify-center gap-32 bg-gray-300 p-6 sm:justify-between sm:gap-0">
+        <header className="w-screen flex flex-row justify-center gap-32 bg-gray-300 py-6 sm:justify-between sm:gap-0">
             <Link to="/" className="flex flex-col items-center">
                 <Image size={10} file={Favorite} img="Favorite"/>
                 <p className="font-bold">Favorites</p>

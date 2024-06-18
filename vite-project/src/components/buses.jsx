@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useState } from "react";
 import BusAlert from "./busAlert";
 import BusStops from "./busStops";
@@ -34,9 +35,10 @@ const Buses = () => {
     if (!searched) {
         return (
             <div className="flex flex-col self-center w-6/12 p-2 rounded-xl min-h-screen bg-slate-200 sm:w-full sm:rounded-none lg:w-3/4">
+                <h3 className="text-4xl text-center font-bold">Buses</h3>
                 <div className="flex flex-row justify-around py-4">
                     <form className="self-center flex flex-row gap-2" onSubmit={(e) => getBusData(e)}>
-                        <input className="p-2 rounded-xl" placeholder="Search by bus" onChange={(e) => setSearch(e.target.value.trim())} required/>
+                        <input className="p-2 rounded-xl" placeholder="M10, Q30, B6..." onChange={(e) => setSearch(e.target.value.trim())} required/>
                         <button className="bg-slate-400 rounded-full p-2 text-white font-bold hover:scale-105" type='submit'>Search</button>
                     </form>
                 </div>

@@ -185,9 +185,9 @@ const Home = () => {
 
     if (favorites.length === 0 && busFavorites.length === 0) {
         return (
-            <div className="flex flex-col self-center w-6/12 p-2 rounded-xl min-h-screen items-center text-center sm:w-full sm:rounded-none">
-                No favorites saved
+            <div className="flex flex-col self-center w-6/12 p-2 rounded-xl min-h-screen items-center text-center sm:w-full bg-slate-200 sm:rounded-none lg:w-3/4">
                 <button className="p-4 bg-blue-500 text-white rounded-full font-bold" onClick={() => setNearbyStations(true)}>Check Nearby Stations</button>
+                <p>No favorites saved</p>
             </div>
         )
     } else {

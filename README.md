@@ -15,17 +15,17 @@ Use `node app.js` in the default folder to run the server for the API and use `n
 
 ### What the application looks like:
 ![Screenshot of all trains](https://imgur.com/ApvICiJ.jpg)
-<p align="center">View for trains page</p>
+<p align="center"><i>View for trains page</i></p>
 <p align="center">Click on a train to view specific stops on the line</p>
 
 ![Screenshot of a specific train](https://imgur.com/A8OVjlb.jpg)
-<p align="center">View for a specific train</p>
+<p align="center"><i>View for a specific train</i></p>
 <p align="center">Check for next arriving times on Northbound and Southbound trains or click on the star to favorite a specific stop</p>
 
 ![Screenshot of a specific bus stop](https://imgur.com/kvobici.jpg)
-<p align="center">View for specific bus</p>
+<p align="center"><i>View for specific bus</i></p>
 <p align="center">Click on the stop name to get bus times in both directions</p>
 
 ![Screenshot of favorites, including train alerts](https://imgur.com/A9751bu.jpg)
-<p align="center">View for favorites page with vehicle alerts</p>
+<p align="center"><i>View for favorites page with vehicle alerts</i></p>
 <p align="center">Displays your favorite train and bus stops or click the button for nearby train and bus stops</p>
